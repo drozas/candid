@@ -1,0 +1,243 @@
+<style type="text/css">
+
+line {
+	stroke: black;
+	opacity: .5;
+	stroke-width: 2px;
+}
+
+circle {
+	fill: lightgray;
+	stroke: black;
+	stroke-width: 2px;
+}
+
+.node text {
+	font-size: 15px;
+	text-anchor: middle;
+	font-weight: bold;
+	font-family: Quicksand;
+}
+
+#tooltip {
+	position: absolute;
+	width: 250px;
+	height: auto;
+	padding: 10px;
+	background-color: white;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	pointer-events: none;
+	color: black;
+}
+
+#tooltip.hidden {
+	display: none;
+}
+
+#tooltip p {
+	margin: 0.5;
+	font-family: Quicksand;
+	font-size: 16px;
+	line-height: 20px;
+}
+
+#tooltip_id {
+	font-size: 20px;
+}
+
+#tooltip_desc {
+	font-size: 14px;
+}
+</style>
+
+<div id="tooltip" class="hidden">
+	<p><strong><span id="tooltip_id"></span></strong></p>
+	<p>Thematic areas: <strong><span id="tooltip_thematic_areas"></span></strong></p>
+	<hr>
+	<p><span id="tooltip_desc"></span></p>
+</div>
+
+<link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" /><svg height="600" width="1024"></svg>
+<p><script src="https://d3js.org/d3.v4.min.js"></script><script src="http://d3js.org/queue.v1.min.js"></script>
+<script>
+
+
+function getBaseURL() {
+    var url = location.href;  // entire url including querystring - also: window.location.href;
+    var baseURL = url.substring(0, url.indexOf('/', 14));
+
+
+    if (baseURL.indexOf('http://localhost') != -1) {
+        // Base Url for localhost
+        var url = location.href;  // window.location.href;
+        var pathname = location.pathname;  // window.location.pathname;
+        var index1 = url.indexOf(pathname);
+        var index2 = url.indexOf("/", index1 + 1);
+        var baseLocalUrl = url.substr(0, index2);
+
+        return baseLocalUrl + "/";
+    }
+    else {
+        // Root Url for domain name
+        return baseURL + "/";
+    }
+
+}
+
+var nodes_url = "https://api.myjson.com/bins/d4usl";
+var edges_url = "https://api.myjson.com/bins/125279";
+//var nodes_url = getBaseURL() + "/api/concepts/nodes";
+//var edges_url = getBaseURL() + "/api/concepts/edges";
+
+var marker = d3.select("svg").append('defs')
+.append('marker')
+.attr("id", "Triangle")
+.attr("refX", 20)
+.attr("refY", 6)
+.attr("markerUnits", 'userSpaceOnUse')
+.attr("markerWidth", 12)
+.attr("markerHeight", 18)
+.attr("orient", 'auto')
+.append('path')
+.attr("d", 'M 0 0 12 6 0 12 3 6');
+
+
+var svg = d3.select("svg"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+    
+
+var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+var simulation = d3.forceSimulation()
+    .force("link", d3.forceLink().id(function(d) { return d.id; }))
+    .force("charge", d3.forceManyBody().strength(-1500).theta(0.2).distanceMin(95).distanceMax(200))
+    .force("center", d3.forceCenter(width / 2, height / 2));
+    
+    
+queue()
+.defer(d3.json, nodes_url)
+.defer(d3.json, edges_url)
+.await(function(error, file1, file2) {createForceLayout(file1, file2); });
+
+function createForceLayout (nodes, links) {
+	
+  //Draw links	
+  var link = svg.append("g")
+    .attr("class", "links")
+    .selectAll("line")
+    .data(links)
+    .enter().append("line");
+  
+  //Draw groups for nodes
+  var node = svg.append("g")
+    .attr("class", "nodes")
+    .selectAll("concepts")
+    .data(nodes)
+    .enter()
+    .append("g")
+    .attr("class", "node");
+  
+  //Draw circles
+  var circles = node.append("circle")
+  .attr("r", 10)
+  .call(d3.drag()
+    .on("start", dragstarted)
+    .on("drag", dragged)
+    .on("end", dragended));
+    
+  //Add onclick url to circles
+  node.selectAll("circle").on("click", function(d) { window.open(getBaseURL() + d.url); });
+    
+  //Draw titles
+  var titles = node.append("title")
+  .text(function(d) {
+    return d.id + " - click for +info";
+  });
+  
+  //Draw node text
+  var text = node.append("text")
+  .attr("y", 25)
+  .text(function(d) {
+    return d.id
+  });
+
+  //Draw markers  
+  d3.selectAll("line").attr("marker-end", "url(#Triangle)");
+  
+  //Events to display extra information on html
+  svg.selectAll(".node")
+  .on("mouseover", function(d,i) {
+	  	var d = this.__data__;
+	  	
+	  	//Unhide class and update elements
+	  	d3.select("#tooltip").classed("hidden", false);
+
+	  	d3.select("#tooltip_id")
+			.text(d.id);
+   
+		d3.select("#tooltip_thematic_areas")
+		.text(d.thematic_areas);
+		
+		d3.select("#tooltip_desc")
+		.text(d.desc);
+      });
+
+  simulation
+      .nodes(nodes)
+      .on("tick", ticked);
+
+  simulation.force("link")
+      .links(links);
+
+  function ticked() {
+	    link
+	      .attr("x1", function(d) {
+	        return d.source.x;
+	      })
+	      .attr("y1", function(d) {
+	        return d.source.y;
+	      })
+	      .attr("x2", function(d) {
+	        return d.target.x;
+	      })
+	      .attr("y2", function(d) {
+	        return d.target.y;
+	      });
+
+	    node.attr("transform", function(d) {
+	      return "translate(" + d.x + "," + d.y + ")";
+	    })
+	  }
+  
+}
+
+function dragstarted(d) {
+  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+function dragged(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragended(d) {
+  if (!d3.event.active) simulation.alphaTarget(0);
+  d.fx = null;
+  d.fy = null;
+}
+
+</script></p>
+
+<blockquote>
+<hr />
+<h2 class="text-align-justify">This project will study aspects of the 'smart' agenda in which practitioners from the Social and Human Sciences (SSH) offer unique and valuable insights of relevance to innovators and researchers in the ICT - LEIT[1] areas. Centred on topics concerning of users, design, digital rights and critical infrastructures, CANDID will engage SSH and ICT - LEIT researchers in ‘extended peer communications’ aiming at Responsible Innovation.</h2>
+</blockquote>
+
