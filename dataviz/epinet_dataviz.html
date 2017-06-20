@@ -89,10 +89,10 @@ function getBaseURL() {
 
 }
 
-var nodes_url = "https://api.myjson.com/bins/d4usl";
-var edges_url = "https://api.myjson.com/bins/125279";
-//var nodes_url = getBaseURL() + "/api/concepts/nodes";
-//var edges_url = getBaseURL() + "/api/concepts/edges";
+//var nodes_url = "https://api.myjson.com/bins/d4usl";
+//var edges_url = "https://api.myjson.com/bins/125279";
+var nodes_url = getBaseURL() + "/api/concepts/nodes";
+var edges_url = getBaseURL() + "/api/concepts/edges";
 
 var marker = d3.select("svg").append('defs')
 .append('marker')
@@ -238,8 +238,16 @@ function dragended(d) {
 
 <blockquote>
 <hr />
-<h2 class="text-align-justify">At present there exists a great diversity for assessing the impacts of science and technology on society and the environment. This project explores new ways for bringing more of these methodologies into concert with each other, as well as with the concerns of innovators, policy makers and citizens.
-
-EPINET introduces the concept of epistemic networks as a way of conceptualizing complex developments within emerging fields of sociotechnical innovation. It establishes a weak or "soft" framework within which the plurality of different assessment practices can be explored in a concerted and holistic manner</h2>
+<h4 class="text-align-justify">EPINET (2012-2015) introduced the notion of epistemic networks as a way to conceptualise complex developments within emerging domains of innovation, as well as within the practices of evaluating their progress and outcomes. The aim of the project was to integrate a range of knowledge assessment methods and develop criteria for more socially robust and efficient interaction at the interfaces of critical evaluation, policy making, and the world of innovators and research leaders. This work was guided by four domain-specific case studies and a cross-cutting case of data protection:</h4>
+<h5 class="text-align-justify">
+<ol>
+	<li>Wearable sensor</li>
+	<li>Cognition for technical systems</li>
+	<li>In vitro meat</li>
+	<li>The smart grid</li>
+	<li> Data Protection Impact Assessment (DPIA) as a regulatory innovation</li>
+</ol>
+</h5>
 </blockquote>
+
 
