@@ -123,10 +123,11 @@ var simulation = d3.forceSimulation()
     
 queue()
 .defer(d3.json, nodes_url)
+.defer(d3.json, discursive_nodes_url)
 .defer(d3.json, edges_url)
-.await(function(error, file1, file2) {createForceLayout(file1, file2); });
+.await(function(error, file1, file2, file3) {createForceLayout(file1, file2, file3); });
 
-function createForceLayout (nodes, links) {
+function createForceLayout (nodes, discursive_nodes, links) {
 	
   //Draw links	
   var link = svg.append("g")
@@ -139,7 +140,7 @@ function createForceLayout (nodes, links) {
   var node = svg.append("g")
     .attr("class", "nodes")
     .selectAll("concepts")
-    .data(nodes)
+    .data(nodes.concat(discursive_nodes))
     .enter()
     .append("g")
     .attr("class", "node");
