@@ -53,12 +53,21 @@ circle {
 }
 </style>
 <div class="hidden" id="tooltip">
-<p>&nbsp;</p>
+<div id="tooltip_id">
+</div>
+<hr />
 
 <p>Thematic areas:</p>
-
+<div id="tooltip_thematic_areas">
+</div>
 <hr />
-<p>&nbsp;</p>
+
+<div id="tooltip_desc">
+
+</div>
+<hr />
+
+
 </div>
 <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" /><svg height="600" width="1024"></svg>
 <p>&nbsp;</p>
@@ -88,14 +97,13 @@ function getBaseURL() {
 
 }
 
-var nodes_url = "https://api.myjson.com/bins/14pciv";
-var discursive_nodes_url = "https://api.myjson.com/bins/zcg2v";
-var edges_url = "https://api.myjson.com/bins/ooscn";
+var nodes_url = "https://api.myjson.com/bins/ua9fr";
+var discursive_nodes_url = "https://api.myjson.com/bins/10u13b";
+var edges_url = "https://api.myjson.com/bins/7nsg7";
 
 
 //var nodes_url = getBaseURL() + "/api/concepts/nodes";
 //var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
-//var edges_url = getBaseURL() + "/api/concepts/edges"; //Old rels
 //var edges_url = getBaseURL() + "api/discursive-relationships/edges";
 
 
@@ -122,7 +130,6 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function(d) { return d.id; }))
     .force("charge", d3.forceManyBody().strength(-1500).theta(0.2).distanceMin(95).distanceMax(200))
-    //.force("charge", d3.forceManyBody().distanceMin(95).distanceMax(200))
     .force("center", d3.forceCenter(width / 2, height / 2));
     
     
@@ -164,7 +171,7 @@ function createForceLayout (nodes, discursive_nodes, links) {
   //Draw titles
   var titles = node.append("title")
   .text(function(d) {
-    return d.id + " - click for +info";
+    return d.id + d.desc +  " - click for +info";
   });
   
   //Draw node text
@@ -186,7 +193,7 @@ function createForceLayout (nodes, discursive_nodes, links) {
 	  	d3.select("#tooltip").classed("hidden", false);
 
 	  	d3.select("#tooltip_id")
-			.text(d.id);
+		.text(d.id);
    
 		d3.select("#tooltip_thematic_areas")
 		.text(d.thematic_areas);
