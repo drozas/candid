@@ -102,9 +102,9 @@ var discursive_nodes_url = "https://api.myjson.com/bins/10u13b";
 var edges_url = "https://api.myjson.com/bins/7nsg7";
 
 
-//var nodes_url = getBaseURL() + "/api/concepts/nodes";
-//var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
-//var edges_url = getBaseURL() + "api/discursive-relationships/edges";
+/*var nodes_url = getBaseURL() + "/api/concepts/nodes";
+var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
+var edges_url = getBaseURL() + "api/discursive-relationships/edges";*/
 
 
 var marker = d3.select("svg").append('defs')
@@ -160,6 +160,7 @@ function createForceLayout (nodes, discursive_nodes, links) {
   //Draw circles
   var circles = node.append("circle")
   .attr("r", 10)
+  //.style("fill", function(d){ return d.type = "excerpt" ? 'lightgray' : 'green' });
   .call(d3.drag()
     .on("start", dragstarted)
     .on("drag", dragged)
