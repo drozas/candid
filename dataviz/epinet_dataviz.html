@@ -150,11 +150,11 @@ var edges_url = getBaseURL() + "api/discursive-relationships/edges";*/
 var c = document.getElementById("key_canvas");
 var ctx = c.getContext("2d");
 //Draw squares
-ctx.fillStyle = "#ff6a5c"; 
+ctx.fillStyle = "#A21333"; 
 ctx.fillRect(0,0,20,20);
 ctx.font = "12px Quicksand";
 ctx.fillText("Excerpts",30,15); 
-ctx.fillStyle = "#056571"; 
+ctx.fillStyle = "#296899"; 
 ctx.fillRect(0,35,20,20);
 ctx.fillText("Discursive relationships",30,50); 
 
@@ -213,7 +213,7 @@ function createForceLayout (nodes, discursive_nodes, links) {
   //Draw circles
   var circles = node.append("circle")
   .attr("r", 10)
-  .style("fill", function(d){ return d.type === "excerpt" ? '#ff6a5c' : '#056571' })
+  .style("fill", function(d){ return d.type === "excerpt" ? '#A21333' : '#296899' })
   .call(d3.drag()
     .on("start", dragstarted)
     .on("drag", dragged)
