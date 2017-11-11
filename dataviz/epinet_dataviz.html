@@ -44,14 +44,36 @@ circle {
 	line-height: 20px;
 }
 
-#tooltip_id {
+#tooltip_id , #key_id {
 	font-size: 20px;
 }
 
 #tooltip_desc {
 	font-size: 14px;
 }
+
+#key {
+	position: absolute;
+	width: 150px;
+	height: auto;
+	padding: 10px;
+	background-color: white;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	pointer-events: none;
+	color: black;
+	left: 1000px;
+}
+
+
+
 </style>
+
+
 <div class="hidden" id="tooltip">
 <div id="tooltip_id">
 </div>
@@ -67,8 +89,22 @@ circle {
 </div>
 <hr />
 
-
 </div>
+
+<div id="key">
+<div id="key_id">
+Key
+</div>
+<hr />
+<div id="key_elements">
+<canvas id="key_canvas" width="150" height="70">
+</canvas>
+</div>
+</div>
+
+
+
+
 <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" /><svg height="600" width="1024"></svg>
 <p>&nbsp;</p>
 
@@ -105,6 +141,18 @@ var edges_url = "https://api.myjson.com/bins/u1a4v";
 /*var nodes_url = getBaseURL() + "/api/concepts/nodes";
 var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
 var edges_url = getBaseURL() + "api/discursive-relationships/edges";*/
+
+//Draw key elements
+var c = document.getElementById("key_canvas");
+var ctx = c.getContext("2d");
+//Draw squares
+ctx.fillStyle = "#ff6a5c"; 
+ctx.fillRect(0,0,20,20);
+ctx.fillText("Excerpts",30,15); 
+ctx.fillStyle = "#056571"; 
+ctx.fillRect(0,35,20,20);
+ctx.fillText("Discursive relationships",30,50); 
+
 
 
 var marker = d3.select("svg").append('defs')
