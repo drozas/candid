@@ -5,9 +5,9 @@
 }
 
 circle {
-	fill: lightgray;
+	fill: #ff6a5c;
 	stroke: black;
-	stroke-width: 2px;
+	stroke-width: 1px;
 }
 
 .node text {
@@ -97,9 +97,9 @@ function getBaseURL() {
 
 }
 
-var nodes_url = "https://api.myjson.com/bins/ua9fr";
-var discursive_nodes_url = "https://api.myjson.com/bins/10u13b";
-var edges_url = "https://api.myjson.com/bins/7nsg7";
+var nodes_url = "https://api.myjson.com/bins/ax9m7";
+var discursive_nodes_url = "https://api.myjson.com/bins/1b8pin";
+var edges_url = "https://api.myjson.com/bins/u1a4v";
 
 
 /*var nodes_url = getBaseURL() + "/api/concepts/nodes";
@@ -160,7 +160,7 @@ function createForceLayout (nodes, discursive_nodes, links) {
   //Draw circles
   var circles = node.append("circle")
   .attr("r", 10)
-  //.style("fill", function(d){ return d.type = "excerpt" ? 'lightgray' : 'green' });
+  .style("fill", function(d){ return d.type === "excerpt" ? '#ff6a5c' : '#056571' })
   .call(d3.drag()
     .on("start", dragstarted)
     .on("drag", dragged)
