@@ -54,7 +54,7 @@ circle {
 
 #key {
 	position: absolute;
-	width: 150px;
+	width: 200px;
 	height: auto;
 	padding: 10px;
 	background-color: white;
@@ -97,7 +97,7 @@ Key
 </div>
 <hr />
 <div id="key_elements">
-<canvas id="key_canvas" width="150" height="70">
+<canvas id="key_canvas" width="200" height="70">
 </canvas>
 </div>
 </div>
@@ -148,6 +148,7 @@ var ctx = c.getContext("2d");
 //Draw squares
 ctx.fillStyle = "#ff6a5c"; 
 ctx.fillRect(0,0,20,20);
+ctx.font = "12px Quicksand";
 ctx.fillText("Excerpts",30,15); 
 ctx.fillStyle = "#056571"; 
 ctx.fillRect(0,35,20,20);
