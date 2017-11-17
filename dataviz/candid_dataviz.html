@@ -1,15 +1,16 @@
-<style type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" />
 
-line {
+<style type="text/css">line {
 	stroke: black;
 	opacity: .5;
 	stroke-width: 2px;
 }
 
 circle {
-	fill: lightgray;
+	fill: #ff6a5c;
 	stroke: black;
-	stroke-width: 2px;
+	stroke-width: 1px;
+	cursor: pointer;
 }
 
 .node text {
@@ -46,25 +47,74 @@ circle {
 	line-height: 20px;
 }
 
-#tooltip_id {
+#tooltip_id , #key_id {
 	font-size: 20px;
 }
 
 #tooltip_desc {
 	font-size: 14px;
 }
+
+#key {
+	position: absolute;
+	width: 200px;
+	height: auto;
+	padding: 10px;
+	background-color: white;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	pointer-events: none;
+	color: black;
+	left: 1000px;
+}
+
+#key_elements{
+font-size: 12px;
+font-family: Quicksand;
+
+}
+
 </style>
 
-<div id="tooltip" class="hidden">
-	<p><strong><span id="tooltip_id"></span></strong></p>
-	<p>Thematic areas: <strong><span id="tooltip_thematic_areas"></span></strong></p>
-	<hr>
-	<p><span id="tooltip_desc"></span></p>
+
+<div class="hidden" id="tooltip">
+<div id="tooltip_id">
+</div>
+<hr />
+
+<p>Thematic areas:</p>
+<div id="tooltip_thematic_areas">
+</div>
+<hr />
+
+<div id="tooltip_desc">
+
 </div>
 
-<link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet" /><svg height="600" width="1024"></svg>
-<p><script src="https://d3js.org/d3.v4.min.js"></script><script src="http://d3js.org/queue.v1.min.js"></script>
-<script>
+</div>
+
+<div id="key">
+<div id="key_id">
+Key
+</div>
+<hr />
+<div id="key_elements">
+<canvas id="key_canvas" width="200" height="70">
+</canvas>
+</div>
+</div>
+
+
+
+
+<svg height="600" width="1024"></svg>
+<p>&nbsp;</p>
+
+<p><script src="https://d3js.org/d3.v4.min.js"></script><script src="http://d3js.org/queue.v1.min.js"></script><script>
 
 
 function getBaseURL() {
@@ -89,10 +139,28 @@ function getBaseURL() {
 
 }
 
-var nodes_url = "https://api.myjson.com/bins/d4usl";
-var edges_url = "https://api.myjson.com/bins/125279";
-//var nodes_url = getBaseURL() + "/api/concepts/nodes";
-//var edges_url = getBaseURL() + "/api/concepts/edges";
+var nodes_url = "https://api.myjson.com/bins/ax9m7";
+var discursive_nodes_url = "https://api.myjson.com/bins/1b8pin";
+var edges_url = "https://api.myjson.com/bins/u1a4v";
+
+
+/*var nodes_url = getBaseURL() + "/api/concepts/nodes";
+var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
+var edges_url = getBaseURL() + "api/discursive-relationships/edges";*/
+
+//Draw key elements
+var c = document.getElementById("key_canvas");
+var ctx = c.getContext("2d");
+//Draw squares
+ctx.fillStyle = "#A21333"; 
+ctx.fillRect(0,0,20,20);
+ctx.font = "12px Helvetica";
+ctx.fillText("Excerpts",30,15); 
+ctx.fillStyle = "#296899"; 
+ctx.fillRect(0,35,20,20);
+ctx.fillText("Discursive relationships",30,50); 
+
+
 
 var marker = d3.select("svg").append('defs')
 .append('marker')
@@ -122,10 +190,11 @@ var simulation = d3.forceSimulation()
     
 queue()
 .defer(d3.json, nodes_url)
+.defer(d3.json, discursive_nodes_url)
 .defer(d3.json, edges_url)
-.await(function(error, file1, file2) {createForceLayout(file1, file2); });
+.await(function(error, file1, file2, file3) {createForceLayout(file1, file2, file3); });
 
-function createForceLayout (nodes, links) {
+function createForceLayout (nodes, discursive_nodes, links) {
 	
   //Draw links	
   var link = svg.append("g")
@@ -138,7 +207,7 @@ function createForceLayout (nodes, links) {
   var node = svg.append("g")
     .attr("class", "nodes")
     .selectAll("concepts")
-    .data(nodes)
+    .data(nodes.concat(discursive_nodes))
     .enter()
     .append("g")
     .attr("class", "node");
@@ -146,18 +215,21 @@ function createForceLayout (nodes, links) {
   //Draw circles
   var circles = node.append("circle")
   .attr("r", 10)
+  .style("fill", function(d){ return d.type === "excerpt" ? '#A21333' : '#296899' })
   .call(d3.drag()
     .on("start", dragstarted)
     .on("drag", dragged)
     .on("end", dragended));
-    
+
   //Add onclick url to circles
   node.selectAll("circle").on("click", function(d) { window.open(getBaseURL() + d.url); });
+
+
     
   //Draw titles
   var titles = node.append("title")
   .text(function(d) {
-    return d.id + " - click for +info";
+    return d.id + " - click for more information";
   });
   
   //Draw node text
@@ -179,7 +251,7 @@ function createForceLayout (nodes, links) {
 	  	d3.select("#tooltip").classed("hidden", false);
 
 	  	d3.select("#tooltip_id")
-			.text(d.id);
+		.text(d.id);
    
 		d3.select("#tooltip_thematic_areas")
 		.text(d.thematic_areas);
@@ -189,7 +261,7 @@ function createForceLayout (nodes, links) {
       });
 
   simulation
-      .nodes(nodes)
+      .nodes(nodes.concat(discursive_nodes))
       .on("tick", ticked);
 
   simulation.force("link")
@@ -238,6 +310,6 @@ function dragended(d) {
 
 <blockquote>
 <hr />
-<h2 class="text-align-justify">This project will study aspects of the 'smart' agenda in which practitioners from the Social and Human Sciences (SSH) offer unique and valuable insights of relevance to innovators and researchers in the ICT - LEIT[1] areas. Centred on topics concerning of users, design, digital rights and critical infrastructures, CANDID will engage SSH and ICT - LEIT researchers in ‘extended peer communications’ aiming at Responsible Innovation.</h2>
+<h2 class="text-align-justify">This project will study aspects of the 'smart' agenda in which practitioners from the Social and Human Sciences (SSH) offer unique and valuable insights of relevance to innovators and researchers in the ICT - LEIT[1] areas. Centred on topics concerning of users, design, digital rights and critical infrastructures, CANDID will engage SSH and ICT - LEIT researchers in "extended peer communications" aiming at Responsible Innovation.</h2>
 </blockquote>
 
