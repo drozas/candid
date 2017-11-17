@@ -10,6 +10,7 @@ circle {
 	fill: #ff6a5c;
 	stroke: black;
 	stroke-width: 1px;
+	cursor: pointer;
 }
 
 .node text {
@@ -219,14 +220,16 @@ function createForceLayout (nodes, discursive_nodes, links) {
     .on("start", dragstarted)
     .on("drag", dragged)
     .on("end", dragended));
-    
+
   //Add onclick url to circles
   node.selectAll("circle").on("click", function(d) { window.open(getBaseURL() + d.url); });
+
+
     
   //Draw titles
   var titles = node.append("title")
   .text(function(d) {
-    return d.id + " - click for +info";
+    return d.id + " - click for more information";
   });
   
   //Draw node text
