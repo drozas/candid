@@ -14,7 +14,7 @@ circle {
 }
 
 .node text {
-	font-size: 15px;
+	font-size: 12px;
 	text-anchor: middle;
 	font-weight: bold;
 	font-family: Quicksand;
@@ -212,6 +212,8 @@ queue()
 .defer(d3.json, edges_url)
 .await(function(error, file1, file2, file3) {createForceLayout(file1, file2, file3); });
 
+d3.select("#controls").append("button").on("click", filterNetwork).html("Filter Network");
+
 function createForceLayout (nodes, discursive_nodes, links) {
 	
   //Draw links	
@@ -232,7 +234,7 @@ function createForceLayout (nodes, discursive_nodes, links) {
   
   //Draw circles
   var circles = node.append("circle")
-  .attr("r", 10)
+  .attr("r", 5)
   .style("fill", function(d){ return d.type === "excerpt" ? '#A21333' : '#296899' })
   .call(d3.drag()
     .on("start", dragstarted)
@@ -285,8 +287,6 @@ function createForceLayout (nodes, discursive_nodes, links) {
   simulation.force("link")
       .links(links);
   
-  d3.select("#controls").append("button").on("click", filterNetwork).html("Filter Network");
-
   function ticked() {
 	    link
 	      .attr("x1", function(d) {
@@ -306,39 +306,6 @@ function createForceLayout (nodes, discursive_nodes, links) {
 	      return "translate(" + d.x + "," + d.y + ")";
 	    })
 	  }
-  
-  function filterNetwork() {
-	  alert("Hello! I am an alert box!");
-      /*force.stop()
-      originalNodes = force.nodes();
-      originalLinks = force.links();
-      influentialNodes = originalNodes.filter(function (d) {return d.followers > 20});
-      influentialLinks = originalLinks.filter(function (d) {return influentialNodes.indexOf(d.source) > -1 && influentialNodes.indexOf(d.target) > -1});
-      
-      d3.selectAll("g.node")
-      .data(influentialNodes, function (d) {return d.id})
-      .exit()
-      .transition()
-      .duration(12000)
-      .style("opacity", 0)
-      .remove();
-      
-      d3.selectAll("line.link")
-      .data(influentialLinks, function (d) {return d.source.id + "-" + d.target.id})
-      .exit()
-      .transition()
-      .duration(9000)
-      .style("opacity", 0)
-      .remove();
-      
-      force
-      .nodes(influentialNodes)
-      .links(influentialLinks)
-      
-      force.start()*/
-      
-    }
-  
 }
 
 function dragstarted(d) {
@@ -358,11 +325,40 @@ function dragended(d) {
   d.fy = null;
 }
 
+/* Check variables... out of scope.. See fig_06_21*/
+function filterNetwork() {
+	  //alert("Hello! I am an alert box!");
+  force.stop();
+  originalNodes = force.nodes();
+  originalLinks = force.links();
+  influentialNodes = originalNodes.filter(function (d) {return d.type === "excerpt"});
+  influentialLinks = originalLinks.filter(function (d) {return influentialNodes.indexOf(d.source) > -1 && influentialNodes.indexOf(d.target) > -1});
+  
+  d3.selectAll("g.node")
+  .data(influentialNodes, function (d) {return d.id})
+  .exit()
+  .transition()
+  .duration(12000)
+  .style("opacity", 0)
+  .remove();
+  
+  d3.selectAll("line.link")
+  .data(influentialLinks, function (d) {return d.source.id + "-" + d.target.id})
+  .exit()
+  .transition()
+  .duration(9000)
+  .style("opacity", 0)
+  .remove();
+  
+  force
+  .nodes(influentialNodes)
+  .links(influentialLinks)
+  
+  force.start()
+  
+}
+
 </script></p>
 
-<p>&nbsp;</p>
-
-<blockquote>
 <hr />
 <h2 class="text-align-justify">At present there exists a great diversity for assessing the impacts of science and technology on society and the environment. This project explores new ways for bringing more of these methodologies into concert with each other, as well as with the concerns of innovators, policy makers and citizens. EPINET introduces the concept of epistemic networks as a way of conceptualizing complex developments within emerging fields of sociotechnical innovation. It establishes a weak or "soft" framework within which the plurality of different assessment practices can be explored in a concerted and holistic manner</h2>
-</blockquote>
