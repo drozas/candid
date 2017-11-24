@@ -34,6 +34,8 @@ circle {
 	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
 	pointer-events: none;
 	color: black;
+	left: 1045px;
+	top: 150px;
 }
 
 #tooltip.hidden {
@@ -69,7 +71,7 @@ circle {
 	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
 	pointer-events: none;
 	color: black;
-	left: 1000px;
+	left: 1045px;
 }
 
 #key_elements{
@@ -97,6 +99,13 @@ font-family: Quicksand;
 </style>
 
 
+<div id="key">
+<div id="key_elements">
+<canvas id="key_canvas" width="200" height="56">
+</canvas>
+</div>
+</div>
+
 <div class="hidden" id="tooltip">
 <div id="tooltip_id">
 </div>
@@ -112,14 +121,6 @@ font-family: Quicksand;
 </div>
 
 </div>
-
-<div id="key">
-<div id="key_elements">
-<canvas id="key_canvas" width="200" height="56">
-</canvas>
-</div>
-</div>
-
 
 
 <svg height="1024" width="1024"></svg>
@@ -237,15 +238,18 @@ function createForceLayout (nodes, discursive_nodes, links) {
     .on("drag", dragged)
     .on("end", dragended));
 
-  //Add onclick url to circles
-  node.selectAll("circle").on("click", function(d) { window.open(getBaseURL() + d.url); });
+  //Add onclick url to circles: only if of type excerpt
+  node.selectAll("circle").on("click", function(d) { 
+	  if (d.type === "excerpt") { window.open(getBaseURL() + d.url);}
+  });
+
 
 
     
   //Draw titles
   var titles = node.append("title")
   .text(function(d) {
-    return d.id + " - click for more information";
+    return d.id;
   });
   
   //Draw node text
