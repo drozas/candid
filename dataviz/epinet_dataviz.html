@@ -280,6 +280,14 @@ function createForceLayout (nodes, discursive_nodes, links) {
 		.text(d.desc);
       });
 
+  //Events to display extra information on html
+  svg.selectAll(".node")
+  .on("mouseout", function(d,i) {
+	  	//Hide class again on mouseout
+	  	d3.select("#tooltip").classed("hidden", true);
+    });
+  
+  
   simulation
       .nodes(nodes.concat(discursive_nodes))
       .on("tick", ticked);
