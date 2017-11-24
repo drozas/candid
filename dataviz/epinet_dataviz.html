@@ -126,9 +126,9 @@ Key
 
 
 
-<svg height="600" width="1024"></svg>
-<div id="controls">Controls
-<div> Button 1
+<svg height="1024" width="1024"></svg>
+<!-- <div id="controls">Controls -->
+<!-- <div> Button 1 -->
 </div> 
 </div>
 
@@ -157,14 +157,14 @@ function getBaseURL() {
 
 }
 
-var nodes_url = "https://api.myjson.com/bins/ax9m7";
+/*var nodes_url = "https://api.myjson.com/bins/ax9m7";
 var discursive_nodes_url = "https://api.myjson.com/bins/1b8pin";
-var edges_url = "https://api.myjson.com/bins/u1a4v";
+var edges_url = "https://api.myjson.com/bins/u1a4v";*/
 
 
-/*var nodes_url = getBaseURL() + "/api/concepts/nodes";
+var nodes_url = getBaseURL() + "/api/concepts/nodes";
 var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
-var edges_url = getBaseURL() + "api/discursive-relationships/edges";*/
+var edges_url = getBaseURL() + "api/discursive-relationships/edges";
 
 //Draw key elements
 var c = document.getElementById("key_canvas");
@@ -326,7 +326,7 @@ function dragended(d) {
 }
 
 /* Check variables... out of scope.. See fig_06_21*/
-function filterNetwork() {
+/*function filterNetwork() {
 	  //alert("Hello! I am an alert box!");
   force.stop();
   originalNodes = force.nodes();
@@ -356,9 +356,9 @@ function filterNetwork() {
   
   force.start()
   
-}
+}*/
 
 </script></p>
 
-<hr />
-<h2 class="text-align-justify">At present there exists a great diversity for assessing the impacts of science and technology on society and the environment. This project explores new ways for bringing more of these methodologies into concert with each other, as well as with the concerns of innovators, policy makers and citizens. EPINET introduces the concept of epistemic networks as a way of conceptualizing complex developments within emerging fields of sociotechnical innovation. It establishes a weak or "soft" framework within which the plurality of different assessment practices can be explored in a concerted and holistic manner</h2>
+
+<h6 class="text-align-justify">The <a href="http://www.epinet.no/content/epinet-project">EPINET project 2012-2015</a> explored new ways of bringing together different methods of assessing the impacts of science and technology on society and the environment, and to consult the concerns of innovators, policy makers and citizens in these matters (see <a href="/credits"><strong><em>About the project</em></strong></a>). Epinet introduced the concept of <strong><em><a href="/excerpts/epistemic-network">epistemic networks</a></em></strong> as a way of conceptualizing complex developments within emerging fields of sociotechnical innovation: <em><a href="http://test-epinet.pantheonsite.io/thematic-areas/excerpts/wearable-sensors" hreflang="en">wearable sensors</a></em>, <em><a href="http://test-epinet.pantheonsite.io/thematic-areas/excerpts/robot-autonomy" hreflang="en">robot autonomy</a></em>, <em><a href="http://test-epinet.pantheonsite.io/thematic-areas/excerpts/vitro-meat" hreflang="en">in-vitro meat</a></em>, <em><a href="http://test-epinet.pantheonsite.io/thematic-areas/excerpts/smart-grids" hreflang="en">smart grids</a></em> and <em><a href="http://test-epinet.pantheonsite.io/thematic-areas/excerpts/data-protection-impact-assessment-dpia" hreflang="en">Data Protection Impact Assessment (DPIA)</a></em>. The thematic case work involved combinations of expertise, including situated and communicative ethics, knowledge assessment and pedigree analysis, legal expertise, media and digital culture studies, multi-scale integrated assessment, risk and uncertainty analysis, socio-technical evaluation and vision assessment. The project established a 'soft' framework with which the plurality of assessment practices can be explored together in a concerted manner.</h6>
