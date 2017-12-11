@@ -123,11 +123,11 @@ font-family: Quicksand;
 </div>
 
 
-<svg height="1024" width="1024"></svg>
-<!-- <div id="controls">Controls -->
-<!-- <div> Button 1 -->
-</div> 
-</div>
+<svg height="900" width="1024"></svg>
+
+<button type="button" class="filter-btn" id="ta1" value="Smart grids">Filter Smart grids</button>
+<button type="button" class="filter-btn" id="orange" value="2">Filter Orange</button>
+<button type="button" class="filter-btn" id="green" value="3">Filter Green</button>
 
 <p><script src="https://d3js.org/d3.v4.min.js"></script><script src="http://d3js.org/queue.v1.min.js"></script><script>
 
@@ -154,14 +154,14 @@ function getBaseURL() {
 
 }
 
-/*var nodes_url = "https://api.myjson.com/bins/ax9m7";
-var discursive_nodes_url = "https://api.myjson.com/bins/1b8pin";
-var edges_url = "https://api.myjson.com/bins/u1a4v";*/
+var nodes_url = "https://api.myjson.com/bins/1e7h6v";
+var discursive_nodes_url = "https://api.myjson.com/bins/19g0cn";
+var edges_url = "https://api.myjson.com/bins/s6ft3";
 
 
-var nodes_url = getBaseURL() + "/api/concepts/nodes";
+/*var nodes_url = getBaseURL() + "/api/concepts/nodes";
 var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
-var edges_url = getBaseURL() + "api/discursive-relationships/edges";
+var edges_url = getBaseURL() + "api/discursive-relationships/edges";*/
 
 //Draw key elements
 var c = document.getElementById("key_canvas");
