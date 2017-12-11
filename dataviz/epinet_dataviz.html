@@ -98,6 +98,7 @@ font-family: Quicksand;
 
 </style>
 
+<div id="controls" />
 
 <div id="key">
 <div id="key_elements">
@@ -125,9 +126,6 @@ font-family: Quicksand;
 
 <svg height="900" width="1024"></svg>
 
-<button type="button" class="filter-btn" id="ta1" value="Smart grids">Filter Smart grids</button>
-<button type="button" class="filter-btn" id="orange" value="2">Filter Orange</button>
-<button type="button" class="filter-btn" id="green" value="3">Filter Green</button>
 
 <p><script src="https://d3js.org/d3.v4.min.js"></script><script src="http://d3js.org/queue.v1.min.js"></script><script>
 
@@ -163,6 +161,8 @@ var edges_url = "https://api.myjson.com/bins/s6ft3";
 var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
 var edges_url = getBaseURL() + "api/discursive-relationships/edges";*/
 
+
+/****** KEYS ********/
 //Draw key elements
 var c = document.getElementById("key_canvas");
 var ctx = c.getContext("2d");
@@ -190,6 +190,8 @@ var marker = d3.select("svg").append('defs')
 .attr("d", 'M 0 0 12 6 0 12 3 6');
 
 
+
+/****** INITIALISATION ********/
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
@@ -209,7 +211,6 @@ queue()
 .defer(d3.json, edges_url)
 .await(function(error, file1, file2, file3) {createForceLayout(file1, file2, file3); });
 
-d3.select("#controls").append("button").on("click", filterNetwork).html("Filter Network");
 
 function createForceLayout (nodes, discursive_nodes, links) {
 	
@@ -314,7 +315,19 @@ function createForceLayout (nodes, discursive_nodes, links) {
 	      return "translate(" + d.x + "," + d.y + ")";
 	    })
 	  }
+
+  d3.select("#controls").append("button").on("click", filterNetwork).html("Filter Network");
+
+  function filterNetwork() {
+	    simulation.stop();
+	    d3.selectAll("circle")
+	    .attr("r", function(d) {return d.weight * 2})
+	    }
+  
 }
+
+
+
 
 function dragstarted(d) {
   if (!d3.event.active) simulation.alphaTarget(0.3).restart();
