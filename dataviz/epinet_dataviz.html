@@ -320,9 +320,30 @@ function createForceLayout (nodes, discursive_nodes, links) {
 
   function filterNetwork() {
 	    simulation.stop();
-	    d3.selectAll("circle")
-	    .attr("r", function(d) {return d.weight * 2})
-	    }
+	    /*d3.selectAll("circle")
+	    .attr("r", 90);*/
+	    
+	    //Get current nodes and links
+      	originalNodes = simulation.nodes();
+	   	originalLinks = simulation.force("link").links();
+	   	
+	   	//Testing... filtering nodes with nid > 60
+	   	filteredNodes = originalNodes.filter(function (d) {return d.nid > 60});
+	   	
+	   	d3.selectAll("g.node")
+	      .data(filteredNodes, function (d) {return d.id})
+	      .exit()
+	      .transition()
+	      .duration(12000)
+	      .style("opacity", 0)
+	      .remove();
+	   	
+	      force
+	      .nodes(filteredNodes)
+	      .links(originalLinks);
+	      
+	      force.start();
+  }
   
 }
 
