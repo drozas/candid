@@ -98,7 +98,9 @@ font-family: Quicksand;
 
 </style>
 
-<div id="controls" />
+<div id="controls">
+
+</div>
 
 <div id="key">
 <div id="key_elements">
@@ -244,9 +246,6 @@ function createForceLayout (nodes, discursive_nodes, links) {
 	  if (d.type === "excerpt") { window.open(getBaseURL() + d.url);}
   });
 
-
-
-    
   //Draw titles
   var titles = node.append("title")
   .text(function(d) {
