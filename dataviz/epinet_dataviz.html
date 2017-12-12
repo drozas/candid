@@ -327,20 +327,34 @@ function createForceLayout (nodes, discursive_nodes, links) {
       	originalNodes = simulation.nodes();
 	   	originalLinks = simulation.force("link").links();
 	   	
-	   	//Testing... filtering nodes with nid > 60
-	   	filteredNodes = originalNodes.filter(function (d) {return d.nid > 60});
+	   	//Testing... filtering nodes with nid > 60. We need to filter also links!
+	   	//Filtered by TA
+	   	filteredNodes = originalNodes.filter(function (d) {return !d.thematic_areas.includes("Smart grids")});
+	   	
+	   	//filteredLinks = originalLinks;
+	   	filteredLinks = originalLinks.filter(function (d) {return !d.target.thematic_areas.includes("Smart grids")});
 	   	
 	   	d3.selectAll("g.node")
 	      .data(filteredNodes, function (d) {return d.id})
 	      .exit()
 	      .transition()
-	      .duration(12000)
+	      .duration(600)
+	      .style("opacity", 0)
+	      .remove();
+	   	
+	      //d3.selectAll("line.link")
+	      d3.selectAll("line")
+	      .data(filteredLinks, function (d) {return d.source.id + "-" + d.target.id})
+	      .exit()
+	      .transition()
+	      .duration(600)
 	      .style("opacity", 0)
 	      .remove();
 	   	
 	      force
 	      .nodes(filteredNodes)
-	      .links(originalLinks);
+	      //.links(influentialLinks);
+	      .links(filteredLinks);
 	      
 	      force.start();
   }
