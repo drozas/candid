@@ -316,24 +316,23 @@ function createForceLayout (nodes, discursive_nodes, links) {
 	    })
 	  }
 
-  d3.select("#controls").append("button").on("click", filterNetwork).html("Filter Network");
+  //TODO: Do this dinamically - change API
+  d3.select("#controls").append("button").on("click", filterNetwork).html("Hide TA from concept (smart grids)");
+  d3.select("#controls").append("button").on("click", filterNetwork2).html("Hide TA from discursive rel (claim-making)");
 
   function filterNetwork() {
 	    simulation.stop();
-	    /*d3.selectAll("circle")
-	    .attr("r", 90);*/
+		$thematic_area_filtered = "Smart grids";
 	    
 	    //Get current nodes and links
       	originalNodes = simulation.nodes();
 	   	originalLinks = simulation.force("link").links();
 	   	
-	   	//Testing... filtering nodes with nid > 60. We need to filter also links!
-	   	//Filtered by TA
-	   	filteredNodes = originalNodes.filter(function (d) {return !d.thematic_areas.includes("Smart grids")});
+	   	//Filtered by nodes and links by TA
+	   	filteredNodes = originalNodes.filter(function (d) {return !d.thematic_areas.includes($thematic_area_filtered)});
+	   	filteredLinks = originalLinks.filter(function (d) {return !d.target.thematic_areas.includes($thematic_area_filtered)});
 	   	
-	   	//filteredLinks = originalLinks;
-	   	filteredLinks = originalLinks.filter(function (d) {return !d.target.thematic_areas.includes("Smart grids")});
-	   	
+	   	//Hide nodes
 	   	d3.selectAll("g.node")
 	      .data(filteredNodes, function (d) {return d.id})
 	      .exit()
@@ -342,7 +341,7 @@ function createForceLayout (nodes, discursive_nodes, links) {
 	      .style("opacity", 0)
 	      .remove();
 	   	
-	      //d3.selectAll("line.link")
+	   	//Hide links
 	      d3.selectAll("line")
 	      .data(filteredLinks, function (d) {return d.source.id + "-" + d.target.id})
 	      .exit()
@@ -353,11 +352,48 @@ function createForceLayout (nodes, discursive_nodes, links) {
 	   	
 	      force
 	      .nodes(filteredNodes)
-	      //.links(influentialLinks);
 	      .links(filteredLinks);
 	      
 	      force.start();
   }
+
+  function filterNetwork2() {
+	    simulation.stop();
+		$thematic_area_filtered = "Claim-making";
+	    
+	    //Get current nodes and links
+    	originalNodes = simulation.nodes();
+	   	originalLinks = simulation.force("link").links();
+	   	
+	   	//Filtered by nodes and links by TA
+	   	filteredNodes = originalNodes.filter(function (d) {return !d.thematic_areas.includes($thematic_area_filtered)});
+	   	filteredLinks = originalLinks.filter(function (d) {return !d.source.thematic_areas.includes($thematic_area_filtered)});
+	   	
+	   	//Hide nodes
+	   	d3.selectAll("g.node")
+	      .data(filteredNodes, function (d) {return d.id})
+	      .exit()
+	      .transition()
+	      .duration(600)
+	      .style("opacity", 0)
+	      .remove();
+	   	
+	   	//Hide links
+	      d3.selectAll("line")
+	      .data(filteredLinks, function (d) {return d.source.id + "-" + d.target.id})
+	      .exit()
+	      .transition()
+	      .duration(600)
+	      .style("opacity", 0)
+	      .remove();
+	   	
+	      force
+	      .nodes(filteredNodes)
+	      .links(filteredLinks);
+	      
+	      force.start();
+}
+  
   
 }
 
@@ -380,39 +416,6 @@ function dragended(d) {
   d.fx = null;
   d.fy = null;
 }
-
-/* Check variables... out of scope.. See fig_06_21*/
-/*function filterNetwork() {
-	  //alert("Hello! I am an alert box!");
-  force.stop();
-  originalNodes = force.nodes();
-  originalLinks = force.links();
-  influentialNodes = originalNodes.filter(function (d) {return d.type === "excerpt"});
-  influentialLinks = originalLinks.filter(function (d) {return influentialNodes.indexOf(d.source) > -1 && influentialNodes.indexOf(d.target) > -1});
-  
-  d3.selectAll("g.node")
-  .data(influentialNodes, function (d) {return d.id})
-  .exit()
-  .transition()
-  .duration(12000)
-  .style("opacity", 0)
-  .remove();
-  
-  d3.selectAll("line.link")
-  .data(influentialLinks, function (d) {return d.source.id + "-" + d.target.id})
-  .exit()
-  .transition()
-  .duration(9000)
-  .style("opacity", 0)
-  .remove();
-  
-  force
-  .nodes(influentialNodes)
-  .links(influentialLinks)
-  
-  force.start()
-  
-}*/
 
 </script></p>
 
