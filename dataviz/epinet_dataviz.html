@@ -214,7 +214,9 @@ queue()
 .defer(d3.json, nodes_url)
 .defer(d3.json, discursive_nodes_url)
 .defer(d3.json, edges_url)
-.await(function(error, file1, file2, file3) {createForceLayout(file1, file2, file3); });
+.defer(d3.json, ta_nodes_url)
+.defer(d3.json, ta_discursive_nodes_url)
+.await(function(error, file1, file2, file3, file4, file5) {createForceLayout(file1, file2, file3, file4, file5); });
 
 
 function createForceLayout (nodes, discursive_nodes, links) {
