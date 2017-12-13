@@ -323,28 +323,73 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
   //TODO: Do this dinamically - change API
   //d3.select("#controls").append("button").on("click", filterNetwork).html("Hide TA from concept (smart grids)");
   //d3.select("#controls").append("button").on("click", filterNetwork2).html("Hide TA from discursive rel (claim-making)");
+
   
+   // Adding TA buttons from nodes via a text 
+   var ta_nodes_buttons = d3.select("#controls")
+    	.append("div")
+    	.attr("class", "ta_nodes_buttons")
+  		.selectAll("div")
+  		.data(ta_nodes)
+  		.enter()
+  		.append("div")
+  		.text(function(d){
+	        return d.ta_name;
+	      });
+  	// Adding event handler
+    ta_nodes_buttons.on("click", function(d) {
+        //alert(d.ta_name);
+    	filterNodesByThematicArea(d.ta_name);
+    });
+
+    // Adding TA buttons from nodes via a text 
+    var ta_discursive_nodes_buttons = d3.select("#controls")
+     	.append("div")
+     	.attr("class", "ta_discursive_nodes_buttons")
+   		.selectAll("div")
+   		.data(ta_discursive_nodes)
+   		.enter()
+   		.append("div")
+   		.text(function(d){
+ 	        return d.ta_name;
+ 	      });
+   	// Adding event handler
+     ta_discursive_nodes_buttons.on("click", function(d) {
+         //alert(d.ta_name);
+     	filterRelationshipsByThematicArea(d.ta_name);
+     });	
+  	
+  	
+  /**** OLD EVENTS HANDLING... TO BE DELETED *******/ 	
   //Create TA nodes buttons dinamically
-  for(var ta_name in ta_nodes) {
-	  d3.select("#controls").append("button").on("click", filterNodesByThematicArea).html(ta_nodes[ta_name].ta_name);
+/*  for(var ta_name in ta_nodes) {
+	  //A
+	  //d3.select("#controls").append("button").on("click", filterNodesByThematicArea).html(ta_nodes[ta_name].ta_name);
+	  
+	  //B
+	  d3.select("#controls").append("button").html(ta_nodes[ta_name].ta_name)
+	  .on("click", function() {
+		  	filterNodesByThematicArea(ta_nodes[ta_name].ta_name);
+	      });
 	}
-  
+*/
+
   //Create TA discursive nodes buttons dinamically
-  for(var ta_name in ta_discursive_nodes) {
+/*  for(var ta_name in ta_discursive_nodes) {
 	  d3.select("#controls").append("button").on("click", filterRelationshipsByThematicArea).html(ta_discursive_nodes[ta_name].ta_name);
-	}
+	}*/
 
   function filterNodesByThematicArea(thematic_area_filtered) {
 	    simulation.stop();
-		$thematic_area_filtered = "Smart grids";
+		//$thematic_area_filtered = "Smart grids";
 	    
 	    //Get current nodes and links
       	originalNodes = simulation.nodes();
 	   	originalLinks = simulation.force("link").links();
 	   	
 	   	//Filtered by nodes and links by TA
-	   	filteredNodes = originalNodes.filter(function (d) {return !d.thematic_areas.includes($thematic_area_filtered)});
-	   	filteredLinks = originalLinks.filter(function (d) {return !d.target.thematic_areas.includes($thematic_area_filtered)});
+	   	filteredNodes = originalNodes.filter(function (d) {return !d.thematic_areas.includes(thematic_area_filtered)});
+	   	filteredLinks = originalLinks.filter(function (d) {return !d.target.thematic_areas.includes(thematic_area_filtered)});
 	   	
 	   	//Hide nodes
 	   	d3.selectAll("g.node")
@@ -373,15 +418,15 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 
   function filterRelationshipsByThematicArea(thematic_area_filtered) {
 	    simulation.stop();
-		$thematic_area_filtered = "Claim-making";
+		//$thematic_area_filtered = "Claim-making";
 	    
 	    //Get current nodes and links
     	originalNodes = simulation.nodes();
 	   	originalLinks = simulation.force("link").links();
 	   	
 	   	//Filtered by nodes and links by TA
-	   	filteredNodes = originalNodes.filter(function (d) {return !d.thematic_areas.includes($thematic_area_filtered)});
-	   	filteredLinks = originalLinks.filter(function (d) {return !d.source.thematic_areas.includes($thematic_area_filtered)});
+	   	filteredNodes = originalNodes.filter(function (d) {return !d.thematic_areas.includes(thematic_area_filtered)});
+	   	filteredLinks = originalLinks.filter(function (d) {return !d.source.thematic_areas.includes(thematic_area_filtered)});
 	   	
 	   	//Hide nodes
 	   	d3.selectAll("g.node")
