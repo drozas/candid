@@ -219,7 +219,7 @@ queue()
 .await(function(error, file1, file2, file3, file4, file5) {createForceLayout(file1, file2, file3, file4, file5); });
 
 
-function createForceLayout (nodes, discursive_nodes, links) {
+function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discursive_nodes) {
 	
   //Draw links	
   var link = svg.append("g")
