@@ -14,7 +14,7 @@ circle {
 }
 
 .node text {
-	font-size: 15px;
+	font-size: 12px;
 	text-anchor: middle;
 	font-weight: bold;
 	font-family: Quicksand;
@@ -34,6 +34,8 @@ circle {
 	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
 	pointer-events: none;
 	color: black;
+	left: 1045px;
+	top: 150px;
 }
 
 #tooltip.hidden {
@@ -69,7 +71,7 @@ circle {
 	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
 	pointer-events: none;
 	color: black;
-	left: 1000px;
+	left: 1045px;
 }
 
 #key_elements{
@@ -78,8 +80,34 @@ font-family: Quicksand;
 
 }
 
+/*#controls {
+    position: absolute;
+    right: 37%;
+    top: 62%;
+	background-color: white;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+	pointer-events: none;
+	color: black;
+	z-index:-1;
+}*/
+
 </style>
 
+<div id="controls">
+ <input type="button" value="Reload" onClick="window.location.reload()">
+</div>
+
+<div id="key">
+<div id="key_elements">
+<canvas id="key_canvas" width="200" height="56">
+</canvas>
+</div>
+</div>
 
 <div class="hidden" id="tooltip">
 <div id="tooltip_id">
@@ -97,22 +125,9 @@ font-family: Quicksand;
 
 </div>
 
-<div id="key">
-<div id="key_id">
-Key
-</div>
-<hr />
-<div id="key_elements">
-<canvas id="key_canvas" width="200" height="70">
-</canvas>
-</div>
-</div>
 
+<svg height="900" width="1024"></svg>
 
-
-
-<svg height="600" width="1024"></svg>
-<p>&nbsp;</p>
 
 <p><script src="https://d3js.org/d3.v4.min.js"></script><script src="http://d3js.org/queue.v1.min.js"></script><script>
 
@@ -139,24 +154,26 @@ function getBaseURL() {
 
 }
 
-var nodes_url = "https://api.myjson.com/bins/ax9m7";
-var discursive_nodes_url = "https://api.myjson.com/bins/1b8pin";
-var edges_url = "https://api.myjson.com/bins/u1a4v";
+var nodes_url = "https://api.myjson.com/bins/1e7h6v";
+var discursive_nodes_url = "https://api.myjson.com/bins/19g0cn";
+var edges_url = "https://api.myjson.com/bins/s6ft3";
 
 
 /*var nodes_url = getBaseURL() + "/api/concepts/nodes";
 var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
 var edges_url = getBaseURL() + "api/discursive-relationships/edges";*/
 
+
+/****** KEYS ********/
 //Draw key elements
 var c = document.getElementById("key_canvas");
 var ctx = c.getContext("2d");
 //Draw squares
-ctx.fillStyle = "#136A9A"; 
+ctx.fillStyle = "#136A9A";
 ctx.fillRect(0,0,20,20);
 ctx.font = "12px Helvetica";
 ctx.fillText("Excerpts",30,15); 
-ctx.fillStyle = "#7EA419"; 
+ctx.fillStyle = "#7EA419";
 ctx.fillRect(0,35,20,20);
 ctx.fillText("Discursive relationships",30,50); 
 
@@ -175,6 +192,8 @@ var marker = d3.select("svg").append('defs')
 .attr("d", 'M 0 0 12 6 0 12 3 6');
 
 
+
+/****** INITIALISATION ********/
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
@@ -193,6 +212,7 @@ queue()
 .defer(d3.json, discursive_nodes_url)
 .defer(d3.json, edges_url)
 .await(function(error, file1, file2, file3) {createForceLayout(file1, file2, file3); });
+
 
 function createForceLayout (nodes, discursive_nodes, links) {
 	
@@ -214,22 +234,25 @@ function createForceLayout (nodes, discursive_nodes, links) {
   
   //Draw circles
   var circles = node.append("circle")
-  .attr("r", 10)
+  .attr("r", 5)
   .style("fill", function(d){ return d.type === "excerpt" ? '#136A9A' : '#7EA419' })
   .call(d3.drag()
     .on("start", dragstarted)
     .on("drag", dragged)
     .on("end", dragended));
 
+  //Add onclick url to circles: only if of type excerpt - disabled on candid project
+  /*node.selectAll("circle").on("click", function(d) { 
+	  if (d.type === "excerpt") { window.open(getBaseURL() + d.url);}
+  });*/
+  
   //Add onclick url to circles
   node.selectAll("circle").on("click", function(d) { window.open(getBaseURL() + d.url); });
 
-
-    
   //Draw titles
   var titles = node.append("title")
   .text(function(d) {
-    return d.id + " - click for more information";
+    return d.id;
   });
   
   //Draw node text
@@ -260,13 +283,21 @@ function createForceLayout (nodes, discursive_nodes, links) {
 		.text(d.desc);
       });
 
+  //Events to display extra information on html
+  svg.selectAll(".node")
+  .on("mouseout", function(d,i) {
+	  	//Hide class again on mouseout
+	  	d3.select("#tooltip").classed("hidden", true);
+    });
+  
+  
   simulation
       .nodes(nodes.concat(discursive_nodes))
       .on("tick", ticked);
 
   simulation.force("link")
       .links(links);
-
+  
   function ticked() {
 	    link
 	      .attr("x1", function(d) {
@@ -286,8 +317,90 @@ function createForceLayout (nodes, discursive_nodes, links) {
 	      return "translate(" + d.x + "," + d.y + ")";
 	    })
 	  }
+
+  //TODO: Do this dinamically - change API
+  d3.select("#controls").append("button").on("click", filterNetwork).html("Hide TA from concept (smart grids)");
+  d3.select("#controls").append("button").on("click", filterNetwork2).html("Hide TA from discursive rel (claim-making)");
+
+  function filterNetwork() {
+	    simulation.stop();
+		$thematic_area_filtered = "Smart grids";
+	    
+	    //Get current nodes and links
+      	originalNodes = simulation.nodes();
+	   	originalLinks = simulation.force("link").links();
+	   	
+	   	//Filtered by nodes and links by TA
+	   	filteredNodes = originalNodes.filter(function (d) {return !d.thematic_areas.includes($thematic_area_filtered)});
+	   	filteredLinks = originalLinks.filter(function (d) {return !d.target.thematic_areas.includes($thematic_area_filtered)});
+	   	
+	   	//Hide nodes
+	   	d3.selectAll("g.node")
+	      .data(filteredNodes, function (d) {return d.id})
+	      .exit()
+	      .transition()
+	      .duration(600)
+	      .style("opacity", 0)
+	      .remove();
+	   	
+	   	//Hide links
+	      d3.selectAll("line")
+	      .data(filteredLinks, function (d) {return d.source.id + "-" + d.target.id})
+	      .exit()
+	      .transition()
+	      .duration(600)
+	      .style("opacity", 0)
+	      .remove();
+	   	
+	      force
+	      .nodes(filteredNodes)
+	      .links(filteredLinks);
+	      
+	      force.start();
+  }
+
+  function filterNetwork2() {
+	    simulation.stop();
+		$thematic_area_filtered = "Claim-making";
+	    
+	    //Get current nodes and links
+    	originalNodes = simulation.nodes();
+	   	originalLinks = simulation.force("link").links();
+	   	
+	   	//Filtered by nodes and links by TA
+	   	filteredNodes = originalNodes.filter(function (d) {return !d.thematic_areas.includes($thematic_area_filtered)});
+	   	filteredLinks = originalLinks.filter(function (d) {return !d.source.thematic_areas.includes($thematic_area_filtered)});
+	   	
+	   	//Hide nodes
+	   	d3.selectAll("g.node")
+	      .data(filteredNodes, function (d) {return d.id})
+	      .exit()
+	      .transition()
+	      .duration(600)
+	      .style("opacity", 0)
+	      .remove();
+	   	
+	   	//Hide links
+	      d3.selectAll("line")
+	      .data(filteredLinks, function (d) {return d.source.id + "-" + d.target.id})
+	      .exit()
+	      .transition()
+	      .duration(600)
+	      .style("opacity", 0)
+	      .remove();
+	   	
+	      force
+	      .nodes(filteredNodes)
+	      .links(filteredLinks);
+	      
+	      force.start();
+}
+  
   
 }
+
+
+
 
 function dragstarted(d) {
   if (!d3.event.active) simulation.alphaTarget(0.3).restart();
@@ -308,8 +421,5 @@ function dragended(d) {
 
 </script></p>
 
-<blockquote>
-<hr />
-<h2 class="text-align-justify">This project will study aspects of the 'smart' agenda in which practitioners from the Social and Human Sciences (SSH) offer unique and valuable insights of relevance to innovators and researchers in the ICT - LEIT[1] areas. Centred on topics concerning of users, design, digital rights and critical infrastructures, CANDID will engage SSH and ICT - LEIT researchers in "extended peer communications" aiming at Responsible Innovation.</h2>
-</blockquote>
 
+<h6 class="text-align-justify">The <a href="http://www.epinet.no/content/epinet-project">EPINET project 2012-2015</a> explored new ways of bringing together different methods of assessing the impacts of science and technology on society and the environment, and to consult the concerns of innovators, policy makers and citizens in these matters (see <a href="/credits"><strong><em>About the project</em></strong></a>). Epinet introduced the concept of <strong><em><a href="/excerpts/epistemic-network">epistemic networks</a></em></strong> as a way of conceptualizing complex developments within emerging fields of sociotechnical innovation: <em><a href="http://test-epinet.pantheonsite.io/thematic-areas/excerpts/wearable-sensors" hreflang="en">wearable sensors</a></em>, <em><a href="http://test-epinet.pantheonsite.io/thematic-areas/excerpts/robot-autonomy" hreflang="en">robot autonomy</a></em>, <em><a href="http://test-epinet.pantheonsite.io/thematic-areas/excerpts/vitro-meat" hreflang="en">in-vitro meat</a></em>, <em><a href="http://test-epinet.pantheonsite.io/thematic-areas/excerpts/smart-grids" hreflang="en">smart grids</a></em> and <em><a href="http://test-epinet.pantheonsite.io/thematic-areas/excerpts/data-protection-impact-assessment-dpia" hreflang="en">Data Protection Impact Assessment (DPIA)</a></em>. The thematic case work involved combinations of expertise, including situated and communicative ethics, knowledge assessment and pedigree analysis, legal expertise, media and digital culture studies, multi-scale integrated assessment, risk and uncertainty analysis, socio-technical evaluation and vision assessment. The project established a 'soft' framework with which the plurality of assessment practices can be explored together in a concerted manner.</h6>
