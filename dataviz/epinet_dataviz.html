@@ -206,7 +206,7 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function(d) { return d.id; }))
-    .force("charge", d3.forceManyBody().strength(-1500).theta(0.2).distanceMin(95).distanceMax(200))
+    .force("charge", d3.forceManyBody().strength(-500).theta(0.2).distanceMin(85).distanceMax(95))
     .force("center", d3.forceCenter(width / 2, height / 2));
     
     
@@ -326,15 +326,15 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
   
   //Create TA nodes buttons dinamically
   for(var ta_name in ta_nodes) {
-	  d3.select("#controls").append("button").on("click", filterNetwork).html(ta_nodes[ta_name].ta_name);
+	  d3.select("#controls").append("button").on("click", filterNodesByThematicArea).html(ta_nodes[ta_name].ta_name);
 	}
   
   //Create TA discursive nodes buttons dinamically
   for(var ta_name in ta_discursive_nodes) {
-	  d3.select("#controls").append("button").on("click", filterNetwork2).html(ta_discursive_nodes[ta_name].ta_name);
+	  d3.select("#controls").append("button").on("click", filterRelationshipsByThematicArea).html(ta_discursive_nodes[ta_name].ta_name);
 	}
 
-  function filterNetwork() {
+  function filterNodesByThematicArea(thematic_area_filtered) {
 	    simulation.stop();
 		$thematic_area_filtered = "Smart grids";
 	    
@@ -371,7 +371,7 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	      force.start();
   }
 
-  function filterNetwork2() {
+  function filterRelationshipsByThematicArea(thematic_area_filtered) {
 	    simulation.stop();
 		$thematic_area_filtered = "Claim-making";
 	    
