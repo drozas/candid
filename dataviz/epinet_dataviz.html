@@ -321,8 +321,18 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	  }
 
   //TODO: Do this dinamically - change API
-  d3.select("#controls").append("button").on("click", filterNetwork).html("Hide TA from concept (smart grids)");
-  d3.select("#controls").append("button").on("click", filterNetwork2).html("Hide TA from discursive rel (claim-making)");
+  //d3.select("#controls").append("button").on("click", filterNetwork).html("Hide TA from concept (smart grids)");
+  //d3.select("#controls").append("button").on("click", filterNetwork2).html("Hide TA from discursive rel (claim-making)");
+  
+  //Create TA nodes buttons dinamically
+  for(var ta_name in ta_nodes) {
+	  d3.select("#controls").append("button").on("click", filterNetwork).html(ta_nodes[ta_name].ta_name);
+	}
+  
+  //Create TA discursive nodes buttons dinamically
+  for(var ta_name in ta_discursive_nodes) {
+	  d3.select("#controls").append("button").on("click", filterNetwork2).html(ta_discursive_nodes[ta_name].ta_name);
+	}
 
   function filterNetwork() {
 	    simulation.stop();
