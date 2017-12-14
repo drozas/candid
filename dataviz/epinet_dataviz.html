@@ -334,17 +334,18 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
   		.append("div")
   		.text(function(d){
 	        return d.ta_name;
-	      })
-	    .attr("id",function(d){
-	        return d.ta_name;
 	      });
+	    
+  		/*.attr("id",function(d){
+	        return d.ta_name;
+	      });*/
    
    
   	// Adding event handler
     ta_nodes_buttons.on("click", function(d) {
         //alert(d.ta_name);
     	filterNodesByThematicArea(d.ta_name);
-    	d3.select(d.ta_name).attr("font-size", "50px");
+    	//d3.select(d.ta_name).attr("font-size", "50px");
     });
 
     // Adding TA buttons from nodes via a text 
