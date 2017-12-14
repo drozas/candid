@@ -397,7 +397,7 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	   	filteredNodes = originalNodes.filter(function (d) {
 	   		return (d.type==="discursive") ||  ( d.type==="excerpt" && d.thematic_areas.includes(thematic_area_filtered))
 	   	});
-	   	filteredLinks = originalLinks.filter(function (d) {return d.target.thematic_areas.includes(thematic_area_filtered)});
+	   	filteredLinks = originalLinks.filter(function (d) {return d.target.thematic_areas.includes(thematic_area_filtered)}); //In case we want to keep links just skipped this filtering
 	   	
 	   	//Hide nodes
 	   	d3.selectAll("g.node")
@@ -433,7 +433,9 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	   	originalLinks = simulation.force("link").links();
 	   	
 	   	//Filtered by nodes and links by TA
-	   	filteredNodes = originalNodes.filter(function (d) {return d.thematic_areas.includes(thematic_area_filtered)});
+	   	filteredNodes = originalNodes.filter(function (d) {
+	   		return (d.type==="excerpt") ||  ( d.type==="discursive" && d.thematic_areas.includes(thematic_area_filtered))
+	   	});
 	   	filteredLinks = originalLinks.filter(function (d) {return d.source.thematic_areas.includes(thematic_area_filtered)});
 	   	
 	   	//Hide nodes
