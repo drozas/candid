@@ -159,11 +159,11 @@ var edges_url = "https://api.myjson.com/bins/s6ft3";
 var ta_nodes_url = "https://api.myjson.com/bins/1be5w3";
 var ta_discursive_nodes_url = "https://api.myjson.com/bins/o8egj";
 
-/*var nodes_url = getBaseURL() + "/api/concepts/nodes";
+var nodes_url = getBaseURL() + "/api/concepts/nodes";
 var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
 var edges_url = getBaseURL() + "api/discursive-relationships/edges";
 var ta_nodes_url = getBaseURL() + "api/thematic-areas/concepts";
-var ta_discursive_nodes_url =getBaseURL() + "api/thematic-areas/discursive-relationships";*/
+var ta_discursive_nodes_url =getBaseURL() + "api/thematic-areas/discursive-relationships";
 
 
 /****** KEYS ********/
@@ -393,9 +393,11 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
       	originalNodes = simulation.nodes();
 	   	originalLinks = simulation.force("link").links();
 	   	
-	   	//Filtered by nodes and links by TA
-	   	filteredNodes = originalNodes.filter(function (d) {return !d.thematic_areas.includes(thematic_area_filtered)});
-	   	filteredLinks = originalLinks.filter(function (d) {return !d.target.thematic_areas.includes(thematic_area_filtered)});
+	   	//Filtered by nodes and links by TA. Return all discursive ones as well as those excerpt ones which have the category
+	   	filteredNodes = originalNodes.filter(function (d) {
+	   		return (d.type==="discursive") ||  ( d.type==="excerpt" && d.thematic_areas.includes(thematic_area_filtered))
+	   	});
+	   	filteredLinks = originalLinks.filter(function (d) {return d.target.thematic_areas.includes(thematic_area_filtered)});
 	   	
 	   	//Hide nodes
 	   	d3.selectAll("g.node")
@@ -431,8 +433,8 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	   	originalLinks = simulation.force("link").links();
 	   	
 	   	//Filtered by nodes and links by TA
-	   	filteredNodes = originalNodes.filter(function (d) {return !d.thematic_areas.includes(thematic_area_filtered)});
-	   	filteredLinks = originalLinks.filter(function (d) {return !d.source.thematic_areas.includes(thematic_area_filtered)});
+	   	filteredNodes = originalNodes.filter(function (d) {return d.thematic_areas.includes(thematic_area_filtered)});
+	   	filteredLinks = originalLinks.filter(function (d) {return d.source.thematic_areas.includes(thematic_area_filtered)});
 	   	
 	   	//Hide nodes
 	   	d3.selectAll("g.node")
