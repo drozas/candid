@@ -99,6 +99,14 @@ font-family: Quicksand;
 
 <div id="controls">
  <input type="button" value="Reload" onClick="window.location.reload()">
+ <div id="controls-excerpts-filters">
+ 	<p>Concepts filters</p>
+ 	
+ </div>
+ <hr />
+  <div id="controls-discursive-filters">
+   	<p>Discursive strategies filters</p>
+ </div>
 </div>
 
 <div id="key">
@@ -325,7 +333,7 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 
   
    // Adding TA buttons from nodes via a text: pending on changing somehow the term after clicking on it 
-   var ta_nodes_buttons = d3.select("#controls")
+   var ta_nodes_buttons = d3.select("#controls-excerpts-filters")
     	.append("div")
     	.attr("class", "ta_nodes_buttons")
   		.selectAll("div")
@@ -349,7 +357,7 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
     });
 
     // Adding TA buttons from nodes via a text 
-    var ta_discursive_nodes_buttons = d3.select("#controls")
+    var ta_discursive_nodes_buttons = d3.select("#controls-discursive-filters")
      	.append("div")
      	.attr("class", "ta_discursive_nodes_buttons")
    		.selectAll("div")
