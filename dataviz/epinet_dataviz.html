@@ -72,6 +72,7 @@ circle {
 	pointer-events: none;
 	color: black;
 	left: 1045px;
+	top: 2%;
 }
 
 #key_elements{
@@ -113,18 +114,29 @@ div#controls-excerpts-filters p, div#controls-discursive-filters p {
 	float: right;
 }
 
+div#controls hr{
+    margin-bottom: 4px;
+    margin-top: 4px;
+}
+
+div#controls-excerpts-filters p , div#controls-discursive-filters p {
+    margin-bottom: 1px;
+    margin-top: 1px;
+
+}
+
+
+
 
 </style>
 
 <div id="controls">
  <div id="controls-excerpts-filters">
  	<p>Concepts filters</p>
- 	 <hr />
  </div>
  <hr />
   <div id="controls-discursive-filters">
    	<p>Discursive strategies filters</p>
-   	 <hr />
  </div>
 
  <hr /> 
@@ -192,11 +204,11 @@ var edges_url = "https://api.myjson.com/bins/s6ft3";
 var ta_nodes_url = "https://api.myjson.com/bins/1be5w3";
 var ta_discursive_nodes_url = "https://api.myjson.com/bins/o8egj";
 
-/*var nodes_url = getBaseURL() + "/api/concepts/nodes";
+var nodes_url = getBaseURL() + "/api/concepts/nodes";
 var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
 var edges_url = getBaseURL() + "api/discursive-relationships/edges";
 var ta_nodes_url = getBaseURL() + "api/thematic-areas/concepts";
-var ta_discursive_nodes_url =getBaseURL() + "api/thematic-areas/discursive-relationships";*/
+var ta_discursive_nodes_url =getBaseURL() + "api/thematic-areas/discursive-relationships";
 
 
 /****** KEYS ********/
