@@ -102,7 +102,7 @@ font-family: Quicksand;
 	font-family: Quicksand;
 }
 
-div#controls-excerpts-filters p, div#controls-discursive-filters p {
+div#controls-excerpts-filters p, div#controls-discursive-filters p, div#controls-formula p {
 	font-weight: bold;
 }
 
@@ -142,7 +142,7 @@ div#controls-excerpts-filters p , div#controls-discursive-filters p {
  
   <div id="controls-formula">
   
-  	Seeing all
+	<p>Filters selected</p>
    
   </div>
 
@@ -387,16 +387,10 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	        return d.ta_name;
 	      });
 	    
-  		/*.attr("id",function(d){
-	        return d.ta_name;
-	      });*/
-   
-   
   	// Adding event handler
     ta_nodes_buttons.on("click", function(d) {
-        //alert(d.ta_name);
+    	d3.select('#controls-formula').append('div').html(d.ta_name);
     	filterNodesByThematicArea(d.ta_name);
-    	//d3.select('#controls-formula').text("fuck!");
     });
 
     // Adding TA buttons from nodes via a text 
@@ -412,8 +406,9 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
  	      });
    	// Adding event handler
      ta_discursive_nodes_buttons.on("click", function(d) {
-         //alert(d.ta_name);
-     	filterRelationshipsByThematicArea(d.ta_name);
+      	d3.select('#controls-formula').append('div').html(d.ta_name);
+    	filterRelationshipsByThematicArea(d.ta_name);
+
      });	
   	
   function filterNodesByThematicArea(thematic_area_filtered) {
@@ -448,11 +443,10 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	      .remove();
 	   	
 	      simulation
-	      .force
 	      .nodes(filteredNodes)
 	      .links(filteredLinks);
 	      
-	      simulation.force.start();
+	      simulation.start();
   }
 
   function filterRelationshipsByThematicArea(thematic_area_filtered) {
@@ -487,11 +481,10 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	      .remove();
 	   	
 	      simulation
-	      .force
 	      .nodes(filteredNodes)
 	      .links(filteredLinks);
 	      
-	      simulation.force.start();
+	      simulation.start();
 }
   
   
