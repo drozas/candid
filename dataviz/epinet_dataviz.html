@@ -204,11 +204,11 @@ var edges_url = "https://api.myjson.com/bins/s6ft3";
 var ta_nodes_url = "https://api.myjson.com/bins/1be5w3";
 var ta_discursive_nodes_url = "https://api.myjson.com/bins/o8egj";
 
-var nodes_url = getBaseURL() + "/api/concepts/nodes";
+/*var nodes_url = getBaseURL() + "/api/concepts/nodes";
 var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
 var edges_url = getBaseURL() + "api/discursive-relationships/edges";
 var ta_nodes_url = getBaseURL() + "api/thematic-areas/concepts";
-var ta_discursive_nodes_url =getBaseURL() + "api/thematic-areas/discursive-relationships";
+var ta_discursive_nodes_url =getBaseURL() + "api/thematic-areas/discursive-relationships";*/
 
 
 /****** KEYS ********/
@@ -238,6 +238,8 @@ var marker = d3.select("svg").append('defs')
 .append('path')
 .attr("d", 'M 0 0 12 6 0 12 3 6');
 
+/****** STYLE APP DEPENDENT ********/
+
 
 
 /****** INITIALISATION ********/
@@ -245,9 +247,6 @@ var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
     
-
-var color = d3.scaleOrdinal(d3.schemeCategory20);
-
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function(d) { return d.id; }))
     .force("charge", d3.forceManyBody().strength(-500).theta(0.2).distanceMin(85).distanceMax(95))
@@ -290,7 +289,7 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
     .on("drag", dragged)
     .on("end", dragended));
 
-  //Add onclick url to circles: only if of type excerpt
+  //Add onclick url to circles: only if of type excerpt - condition should be disabled on CANDID version
   node.selectAll("circle").on("click", function(d) { 
 	  if (d.type === "excerpt") { window.open(getBaseURL() + d.url);}
   });
@@ -364,11 +363,6 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	    })
 	  }
 
-  //TODO: Do this dinamically - change API
-  //d3.select("#controls").append("button").on("click", filterNetwork).html("Hide TA from concept (smart grids)");
-  //d3.select("#controls").append("button").on("click", filterNetwork2).html("Hide TA from discursive rel (claim-making)");
-
-  
    // Adding TA buttons from nodes via a text: pending on changing somehow the term after clicking on it 
    var ta_nodes_buttons = d3.select("#controls-excerpts-filters")
     	.append("div")
@@ -410,30 +404,9 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
      	filterRelationshipsByThematicArea(d.ta_name);
      });	
   	
-  	
-  /**** OLD EVENTS HANDLING... TO BE DELETED *******/ 	
-  //Create TA nodes buttons dinamically
-/*  for(var ta_name in ta_nodes) {
-	  //A
-	  //d3.select("#controls").append("button").on("click", filterNodesByThematicArea).html(ta_nodes[ta_name].ta_name);
-	  
-	  //B
-	  d3.select("#controls").append("button").html(ta_nodes[ta_name].ta_name)
-	  .on("click", function() {
-		  	filterNodesByThematicArea(ta_nodes[ta_name].ta_name);
-	      });
-	}
-*/
-
-  //Create TA discursive nodes buttons dinamically
-/*  for(var ta_name in ta_discursive_nodes) {
-	  d3.select("#controls").append("button").on("click", filterRelationshipsByThematicArea).html(ta_discursive_nodes[ta_name].ta_name);
-	}*/
-
   function filterNodesByThematicArea(thematic_area_filtered) {
 	    simulation.stop();
-		//$thematic_area_filtered = "Smart grids";
-	    
+ 
 	    //Get current nodes and links
       	originalNodes = simulation.nodes();
 	   	originalLinks = simulation.force("link").links();
@@ -454,7 +427,7 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	      .remove();
 	   	
 	   	//Hide links
-	      d3.selectAll("line")
+	   	d3.selectAll("line")
 	      .data(filteredLinks, function (d) {return d.source.id + "-" + d.target.id})
 	      .exit()
 	      .transition()
@@ -471,7 +444,6 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 
   function filterRelationshipsByThematicArea(thematic_area_filtered) {
 	    simulation.stop();
-		//$thematic_area_filtered = "Claim-making";
 	    
 	    //Get current nodes and links
     	originalNodes = simulation.nodes();
@@ -493,7 +465,7 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	      .remove();
 	   	
 	   	//Hide links
-	      d3.selectAll("line")
+	   	d3.selectAll("line")
 	      .data(filteredLinks, function (d) {return d.source.id + "-" + d.target.id})
 	      .exit()
 	      .transition()
@@ -510,9 +482,6 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
   
   
 }
-
-
-
 
 function dragstarted(d) {
   if (!d3.event.active) simulation.alphaTarget(0.3).restart();
