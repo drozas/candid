@@ -35,7 +35,7 @@ circle {
 	pointer-events: none;
 	color: black;
 	left: 1045px;
-	top: 150px;
+	top: 2%;
 }
 
 #tooltip.hidden {
@@ -45,16 +45,16 @@ circle {
 #tooltip p {
 	margin: 0.5;
 	font-family: Quicksand;
-	font-size: 16px;
-	line-height: 20px;
+	font-size: 12px;
+	line-height: 2px;
 }
 
-#tooltip_id , #key_id {
-	font-size: 20px;
-}
-
-#tooltip_desc {
+#tooltip_id{
 	font-size: 14px;
+}
+
+#tooltip_desc, #key_id, #tooltip_thematic_areas  {
+	font-size: 12px;
 }
 
 #key {
@@ -71,7 +71,7 @@ circle {
 	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
 	pointer-events: none;
 	color: black;
-	left: 1045px;
+	left: -140px;
 	top: 2%;
 }
 
@@ -83,8 +83,8 @@ font-family: Quicksand;
 
 #controls {
     position: absolute;
-    left: 2%;
-    top: 2%;
+    left: -140px;
+    top: 115px;
 	background-color: white;
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
@@ -95,6 +95,7 @@ font-family: Quicksand;
 	color: black;
 	z-index: 1000;
 	padding: 10px;
+	min-width: 200px;
 }
 
 #controls-formula, .ta_nodes_buttons , .ta_discursive_nodes_buttons, div#controls-excerpts-filters p, div#controls-discursive-filters p {
@@ -166,7 +167,9 @@ div#controls-excerpts-filters p , div#controls-discursive-filters p, div#control
 </div>
 <hr />
 
-<p>Thematic areas:</p>
+<div id="tooltip_thematic_areas_title">
+Thematic areas:
+</div>
 <div id="tooltip_thematic_areas">
 </div>
 <hr />
@@ -208,11 +211,11 @@ function getBaseURL() {
 
 
 // Static JSON for localhost testing
-/*var nodes_url = "https://api.myjson.com/bins/1e7h6v";
+var nodes_url = "https://api.myjson.com/bins/1e7h6v";
 var discursive_nodes_url = "https://api.myjson.com/bins/19g0cn";
 var edges_url = "https://api.myjson.com/bins/s6ft3";
 var ta_nodes_url = "https://api.myjson.com/bins/1be5w3";
-var ta_discursive_nodes_url = "https://api.myjson.com/bins/o8egj";*/
+var ta_discursive_nodes_url = "https://api.myjson.com/bins/o8egj";
 
 var nodes_url = getBaseURL() + "/api/concepts/nodes";
 var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
@@ -308,12 +311,6 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	  if (d.type === "excerpt") { window.open(getBaseURL() + d.url);}
   });
 
-  //Draw titles
-  var titles = node.append("title")
-  .text(function(d) {
-    return d.id;
-  });
-  
   //Draw node text
   var text = node.append("text")
   .attr("y", 25)
