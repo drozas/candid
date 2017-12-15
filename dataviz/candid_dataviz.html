@@ -97,12 +97,12 @@ font-family: Quicksand;
 	padding: 10px;
 }
 
-.ta_nodes_buttons , .ta_discursive_nodes_buttons, div#controls-excerpts-filters p, div#controls-discursive-filters p {
+#controls-formula, .ta_nodes_buttons , .ta_discursive_nodes_buttons, div#controls-excerpts-filters p, div#controls-discursive-filters p {
 	font-size: 12px;
 	font-family: Quicksand;
 }
 
-div#controls-excerpts-filters p, div#controls-discursive-filters p {
+div#controls-excerpts-filters p, div#controls-discursive-filters p, div#controls-formula p {
 	font-weight: bold;
 }
 
@@ -119,7 +119,7 @@ div#controls hr{
     margin-top: 4px;
 }
 
-div#controls-excerpts-filters p , div#controls-discursive-filters p {
+div#controls-excerpts-filters p , div#controls-discursive-filters p, div#controls-formula p {
     margin-bottom: 1px;
     margin-top: 1px;
 
@@ -139,6 +139,15 @@ div#controls-excerpts-filters p , div#controls-discursive-filters p {
  </div>
 
  <hr /> 
+ 
+  <div id="controls-formula">
+  
+	<p>Filters selected</p>
+   
+  </div>
+
+  <hr /> 
+ 
   <div id="controls-xtra-buttons">
   
    <input type="button" value="Reload" onClick="window.location.reload()">
@@ -197,11 +206,13 @@ function getBaseURL() {
 
 }
 
-var nodes_url = "https://api.myjson.com/bins/1e7h6v";
+
+// Static JSON for localhost testing
+/*var nodes_url = "https://api.myjson.com/bins/1e7h6v";
 var discursive_nodes_url = "https://api.myjson.com/bins/19g0cn";
 var edges_url = "https://api.myjson.com/bins/s6ft3";
 var ta_nodes_url = "https://api.myjson.com/bins/1be5w3";
-var ta_discursive_nodes_url = "https://api.myjson.com/bins/o8egj";
+var ta_discursive_nodes_url = "https://api.myjson.com/bins/o8egj";*/
 
 var nodes_url = getBaseURL() + "/api/concepts/nodes";
 var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
@@ -378,16 +389,10 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	        return d.ta_name;
 	      });
 	    
-  		/*.attr("id",function(d){
-	        return d.ta_name;
-	      });*/
-   
-   
   	// Adding event handler
     ta_nodes_buttons.on("click", function(d) {
-        //alert(d.ta_name);
+    	d3.select('#controls-formula').append('div').html(d.ta_name);
     	filterNodesByThematicArea(d.ta_name);
-    	//d3.select(d.ta_name).attr("font-size", "50px");
     });
 
     // Adding TA buttons from nodes via a text 
@@ -403,8 +408,9 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
  	      });
    	// Adding event handler
      ta_discursive_nodes_buttons.on("click", function(d) {
-         //alert(d.ta_name);
-     	filterRelationshipsByThematicArea(d.ta_name);
+      	d3.select('#controls-formula').append('div').html(d.ta_name);
+    	filterRelationshipsByThematicArea(d.ta_name);
+
      });	
   	
   function filterNodesByThematicArea(thematic_area_filtered) {
@@ -438,11 +444,11 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	      .style("opacity", 0)
 	      .remove();
 	   	
-	      force
+	      simulation
 	      .nodes(filteredNodes)
 	      .links(filteredLinks);
 	      
-	      force.start();
+	      simulation.start();
   }
 
   function filterRelationshipsByThematicArea(thematic_area_filtered) {
@@ -476,11 +482,11 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	      .style("opacity", 0)
 	      .remove();
 	   	
-	      force
+	      simulation
 	      .nodes(filteredNodes)
 	      .links(filteredLinks);
 	      
-	      force.start();
+	      simulation.start();
 }
   
   
