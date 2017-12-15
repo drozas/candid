@@ -294,7 +294,7 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 
   //Add onclick url to circles: only if of type excerpt - condition should be disabled on #CANDID# version
   node.selectAll("circle").on("click", function(d) { 
-	  if (d.type === "excerpt") { window.open(getBaseURL() + d.url);}
+	  window.open(getBaseURL() + d.url);
   });
 
   //Draw titles
