@@ -211,6 +211,12 @@ var ta_nodes_url = getBaseURL() + "api/thematic-areas/concepts";
 var ta_discursive_nodes_url =getBaseURL() + "api/thematic-areas/discursive-relationships";*/
 
 
+
+/****** STYLE APP DEPENDENT #CANDID# #EPINET# ********/
+var excerpt_colour = "#A21333";
+var discursive_colour = "#296899";
+
+
 /****** KEYS ********/
 //Draw key elements
 var c = document.getElementById("key_canvas");
@@ -237,9 +243,6 @@ var marker = d3.select("svg").append('defs')
 .attr("orient", 'auto')
 .append('path')
 .attr("d", 'M 0 0 12 6 0 12 3 6');
-
-/****** STYLE APP DEPENDENT ********/
-
 
 
 /****** INITIALISATION ********/
@@ -289,7 +292,7 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
     .on("drag", dragged)
     .on("end", dragended));
 
-  //Add onclick url to circles: only if of type excerpt - condition should be disabled on CANDID version
+  //Add onclick url to circles: only if of type excerpt - condition should be disabled on #CANDID# version
   node.selectAll("circle").on("click", function(d) { 
 	  if (d.type === "excerpt") { window.open(getBaseURL() + d.url);}
   });
