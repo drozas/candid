@@ -125,10 +125,9 @@ div#controls-excerpts-filters p , div#controls-discursive-filters p {
 
 }
 
-
-
-
 </style>
+
+<!-- #CANDID# #EPINET#  -->
 
 <div id="controls">
  <div id="controls-excerpts-filters">
@@ -204,31 +203,32 @@ var edges_url = "https://api.myjson.com/bins/s6ft3";
 var ta_nodes_url = "https://api.myjson.com/bins/1be5w3";
 var ta_discursive_nodes_url = "https://api.myjson.com/bins/o8egj";
 
-/*var nodes_url = getBaseURL() + "/api/concepts/nodes";
+var nodes_url = getBaseURL() + "/api/concepts/nodes";
 var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
 var edges_url = getBaseURL() + "api/discursive-relationships/edges";
 var ta_nodes_url = getBaseURL() + "api/thematic-areas/concepts";
-var ta_discursive_nodes_url =getBaseURL() + "api/thematic-areas/discursive-relationships";*/
+var ta_discursive_nodes_url =getBaseURL() + "api/thematic-areas/discursive-relationships";
 
 
 
 /****** STYLE APP DEPENDENT #CANDID# #EPINET# ********/
 var excerpt_colour = "#A21333";
 var discursive_colour = "#296899";
-
+var excerpt_title = "Concepts";
+var discursive_title = "Discursive strategies";
 
 /****** KEYS ********/
 //Draw key elements
 var c = document.getElementById("key_canvas");
 var ctx = c.getContext("2d");
 //Draw squares
-ctx.fillStyle = "#A21333"; 
+ctx.fillStyle = excerpt_colour; 
 ctx.fillRect(0,0,20,20);
 ctx.font = "12px Helvetica";
-ctx.fillText("Concepts",30,15); 
-ctx.fillStyle = "#296899"; 
+ctx.fillText(excerpt_title,30,15); 
+ctx.fillStyle = discursive_colour; 
 ctx.fillRect(0,35,20,20);
-ctx.fillText("Discursive strategies",30,50); 
+ctx.fillText(discursive_title,30,50); 
 
 
 
@@ -286,7 +286,7 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
   //Draw circles
   var circles = node.append("circle")
   .attr("r", 5)
-  .style("fill", function(d){ return d.type === "excerpt" ? '#A21333' : '#296899' })
+  .style("fill", function(d){ return d.type === "excerpt" ? excerpt_colour : discursive_colour })
   .call(d3.drag()
     .on("start", dragstarted)
     .on("drag", dragged)
@@ -505,5 +505,5 @@ function dragended(d) {
 
 </script></p>
 
-
+<!-- #CANDID# #EPINET#  -->
 <h6 class="text-align-justify">The <a href="http://www.epinet.no/content/epinet-project">EPINET project 2012-2015</a> explored new ways of bringing together different methods of assessing the impacts of science and technology on society and the environment, and to consult the concerns of innovators, policy makers and citizens in these matters (see <a href="/credits"><strong><em>About the project</em></strong></a>). Epinet introduced the concept of <strong><em><a href="/excerpts/epistemic-network">epistemic networks</a></em></strong> as a way of conceptualizing complex developments within emerging fields of sociotechnical innovation: <em><a href="http://test-epinet.pantheonsite.io/thematic-areas/excerpts/wearable-sensors" hreflang="en">wearable sensors</a></em>, <em><a href="http://test-epinet.pantheonsite.io/thematic-areas/excerpts/robot-autonomy" hreflang="en">robot autonomy</a></em>, <em><a href="http://test-epinet.pantheonsite.io/thematic-areas/excerpts/vitro-meat" hreflang="en">in-vitro meat</a></em>, <em><a href="http://test-epinet.pantheonsite.io/thematic-areas/excerpts/smart-grids" hreflang="en">smart grids</a></em> and <em><a href="http://test-epinet.pantheonsite.io/thematic-areas/excerpts/data-protection-impact-assessment-dpia" hreflang="en">Data Protection Impact Assessment (DPIA)</a></em>. The thematic case work involved combinations of expertise, including situated and communicative ethics, knowledge assessment and pedigree analysis, legal expertise, media and digital culture studies, multi-scale integrated assessment, risk and uncertainty analysis, socio-technical evaluation and vision assessment. The project established a 'soft' framework with which the plurality of assessment practices can be explored together in a concerted manner.</h6>
