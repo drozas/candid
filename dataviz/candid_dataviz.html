@@ -7,7 +7,7 @@
 }
 
 circle {
-	fill: #136A9A;
+	fill: #ff6a5c;
 	stroke: black;
 	stroke-width: 1px;
 	cursor: pointer;
@@ -72,6 +72,7 @@ circle {
 	pointer-events: none;
 	color: black;
 	left: 1045px;
+	top: 2%;
 }
 
 #key_elements{
@@ -80,10 +81,10 @@ font-family: Quicksand;
 
 }
 
-/*#controls {
+#controls {
     position: absolute;
-    right: 37%;
-    top: 62%;
+    left: 2%;
+    top: 2%;
 	background-color: white;
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
@@ -91,15 +92,57 @@ font-family: Quicksand;
 	-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
 	-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
 	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-	pointer-events: none;
 	color: black;
-	z-index:-1;
-}*/
+	z-index: 1000;
+	padding: 10px;
+}
+
+.ta_nodes_buttons , .ta_discursive_nodes_buttons, div#controls-excerpts-filters p, div#controls-discursive-filters p {
+	font-size: 12px;
+	font-family: Quicksand;
+}
+
+div#controls-excerpts-filters p, div#controls-discursive-filters p {
+	font-weight: bold;
+}
+
+.ta_nodes_buttons , .ta_discursive_nodes_buttons{
+	cursor: pointer;
+}
+
+#controls-xtra-buttons{
+	float: right;
+}
+
+div#controls hr{
+    margin-bottom: 4px;
+    margin-top: 4px;
+}
+
+div#controls-excerpts-filters p , div#controls-discursive-filters p {
+    margin-bottom: 1px;
+    margin-top: 1px;
+
+}
 
 </style>
 
+<!-- #CANDID# #EPINET#  -->
+
 <div id="controls">
- <input type="button" value="Reload" onClick="window.location.reload()">
+ <div id="controls-excerpts-filters">
+ 	<p>Excerpts filters</p>
+ </div>
+ <hr />
+  <div id="controls-discursive-filters">
+   	<p>Discursive relationships filters</p>
+ </div>
+
+ <hr /> 
+  <div id="controls-xtra-buttons">
+  
+   <input type="button" value="Reload" onClick="window.location.reload()">
+  </div>
 </div>
 
 <div id="key">
@@ -157,25 +200,35 @@ function getBaseURL() {
 var nodes_url = "https://api.myjson.com/bins/1e7h6v";
 var discursive_nodes_url = "https://api.myjson.com/bins/19g0cn";
 var edges_url = "https://api.myjson.com/bins/s6ft3";
-
+var ta_nodes_url = "https://api.myjson.com/bins/1be5w3";
+var ta_discursive_nodes_url = "https://api.myjson.com/bins/o8egj";
 
 var nodes_url = getBaseURL() + "/api/concepts/nodes";
 var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
 var edges_url = getBaseURL() + "api/discursive-relationships/edges";
+var ta_nodes_url = getBaseURL() + "api/thematic-areas/concepts";
+var ta_discursive_nodes_url =getBaseURL() + "api/thematic-areas/discursive-relationships";
 
+
+
+/****** STYLE APP DEPENDENT #CANDID# #EPINET# ********/
+var excerpt_colour = "#136A9A";
+var discursive_colour = "#7EA419";
+var excerpt_title = "Excerpts";
+var discursive_title = "Discursive relationships";
 
 /****** KEYS ********/
 //Draw key elements
 var c = document.getElementById("key_canvas");
 var ctx = c.getContext("2d");
 //Draw squares
-ctx.fillStyle = "#136A9A";
+ctx.fillStyle = excerpt_colour; 
 ctx.fillRect(0,0,20,20);
 ctx.font = "12px Helvetica";
-ctx.fillText("Excerpts",30,15); 
-ctx.fillStyle = "#7EA419";
+ctx.fillText(excerpt_title,30,15); 
+ctx.fillStyle = discursive_colour; 
 ctx.fillRect(0,35,20,20);
-ctx.fillText("Discursive relationships",30,50); 
+ctx.fillText(discursive_title,30,50); 
 
 
 
@@ -192,18 +245,14 @@ var marker = d3.select("svg").append('defs')
 .attr("d", 'M 0 0 12 6 0 12 3 6');
 
 
-
 /****** INITIALISATION ********/
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
     
-
-var color = d3.scaleOrdinal(d3.schemeCategory20);
-
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function(d) { return d.id; }))
-    .force("charge", d3.forceManyBody().strength(-1500).theta(0.2).distanceMin(95).distanceMax(200))
+    .force("charge", d3.forceManyBody().strength(-500).theta(0.2).distanceMin(85).distanceMax(95))
     .force("center", d3.forceCenter(width / 2, height / 2));
     
     
@@ -211,10 +260,12 @@ queue()
 .defer(d3.json, nodes_url)
 .defer(d3.json, discursive_nodes_url)
 .defer(d3.json, edges_url)
-.await(function(error, file1, file2, file3) {createForceLayout(file1, file2, file3); });
+.defer(d3.json, ta_nodes_url)
+.defer(d3.json, ta_discursive_nodes_url)
+.await(function(error, file1, file2, file3, file4, file5) {createForceLayout(file1, file2, file3, file4, file5); });
 
 
-function createForceLayout (nodes, discursive_nodes, links) {
+function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discursive_nodes) {
 	
   //Draw links	
   var link = svg.append("g")
@@ -235,19 +286,16 @@ function createForceLayout (nodes, discursive_nodes, links) {
   //Draw circles
   var circles = node.append("circle")
   .attr("r", 5)
-  .style("fill", function(d){ return d.type === "excerpt" ? '#136A9A' : '#7EA419' })
+  .style("fill", function(d){ return d.type === "excerpt" ? excerpt_colour : discursive_colour })
   .call(d3.drag()
     .on("start", dragstarted)
     .on("drag", dragged)
     .on("end", dragended));
 
-  //Add onclick url to circles: only if of type excerpt - disabled on candid project
-  /*node.selectAll("circle").on("click", function(d) { 
+  //Add onclick url to circles: only if of type excerpt - condition should be disabled on #CANDID# version
+  node.selectAll("circle").on("click", function(d) { 
 	  if (d.type === "excerpt") { window.open(getBaseURL() + d.url);}
-  });*/
-  
-  //Add onclick url to circles
-  node.selectAll("circle").on("click", function(d) { window.open(getBaseURL() + d.url); });
+  });
 
   //Draw titles
   var titles = node.append("title")
@@ -318,21 +366,59 @@ function createForceLayout (nodes, discursive_nodes, links) {
 	    })
 	  }
 
-  //TODO: Do this dinamically - change API
-  d3.select("#controls").append("button").on("click", filterNetwork).html("Hide TA from concept (smart grids)");
-  d3.select("#controls").append("button").on("click", filterNetwork2).html("Hide TA from discursive rel (claim-making)");
-
-  function filterNetwork() {
-	    simulation.stop();
-		$thematic_area_filtered = "Smart grids";
+   // Adding TA buttons from nodes via a text: pending on changing somehow the term after clicking on it 
+   var ta_nodes_buttons = d3.select("#controls-excerpts-filters")
+    	.append("div")
+    	.attr("class", "ta_nodes_buttons")
+  		.selectAll("div")
+  		.data(ta_nodes)
+  		.enter()
+  		.append("div")
+  		.text(function(d){
+	        return d.ta_name;
+	      });
 	    
+  		/*.attr("id",function(d){
+	        return d.ta_name;
+	      });*/
+   
+   
+  	// Adding event handler
+    ta_nodes_buttons.on("click", function(d) {
+        //alert(d.ta_name);
+    	filterNodesByThematicArea(d.ta_name);
+    	//d3.select(d.ta_name).attr("font-size", "50px");
+    });
+
+    // Adding TA buttons from nodes via a text 
+    var ta_discursive_nodes_buttons = d3.select("#controls-discursive-filters")
+     	.append("div")
+     	.attr("class", "ta_discursive_nodes_buttons")
+   		.selectAll("div")
+   		.data(ta_discursive_nodes)
+   		.enter()
+   		.append("div")
+   		.text(function(d){
+ 	        return d.ta_name;
+ 	      });
+   	// Adding event handler
+     ta_discursive_nodes_buttons.on("click", function(d) {
+         //alert(d.ta_name);
+     	filterRelationshipsByThematicArea(d.ta_name);
+     });	
+  	
+  function filterNodesByThematicArea(thematic_area_filtered) {
+	    simulation.stop();
+ 
 	    //Get current nodes and links
       	originalNodes = simulation.nodes();
 	   	originalLinks = simulation.force("link").links();
 	   	
-	   	//Filtered by nodes and links by TA
-	   	filteredNodes = originalNodes.filter(function (d) {return !d.thematic_areas.includes($thematic_area_filtered)});
-	   	filteredLinks = originalLinks.filter(function (d) {return !d.target.thematic_areas.includes($thematic_area_filtered)});
+	   	//Filtered by nodes and links by TA. Return all discursive ones as well as those excerpt ones which have the category
+	   	filteredNodes = originalNodes.filter(function (d) {
+	   		return (d.type==="discursive") ||  ( d.type==="excerpt" && d.thematic_areas.includes(thematic_area_filtered))
+	   	});
+	   	filteredLinks = originalLinks.filter(function (d) {return d.target.thematic_areas.includes(thematic_area_filtered)}); //In case we want to keep links just skipped this filtering
 	   	
 	   	//Hide nodes
 	   	d3.selectAll("g.node")
@@ -344,7 +430,7 @@ function createForceLayout (nodes, discursive_nodes, links) {
 	      .remove();
 	   	
 	   	//Hide links
-	      d3.selectAll("line")
+	   	d3.selectAll("line")
 	      .data(filteredLinks, function (d) {return d.source.id + "-" + d.target.id})
 	      .exit()
 	      .transition()
@@ -359,17 +445,18 @@ function createForceLayout (nodes, discursive_nodes, links) {
 	      force.start();
   }
 
-  function filterNetwork2() {
+  function filterRelationshipsByThematicArea(thematic_area_filtered) {
 	    simulation.stop();
-		$thematic_area_filtered = "Claim-making";
 	    
 	    //Get current nodes and links
     	originalNodes = simulation.nodes();
 	   	originalLinks = simulation.force("link").links();
 	   	
 	   	//Filtered by nodes and links by TA
-	   	filteredNodes = originalNodes.filter(function (d) {return !d.thematic_areas.includes($thematic_area_filtered)});
-	   	filteredLinks = originalLinks.filter(function (d) {return !d.source.thematic_areas.includes($thematic_area_filtered)});
+	   	filteredNodes = originalNodes.filter(function (d) {
+	   		return (d.type==="excerpt") ||  ( d.type==="discursive" && d.thematic_areas.includes(thematic_area_filtered))
+	   	});
+	   	filteredLinks = originalLinks.filter(function (d) {return d.source.thematic_areas.includes(thematic_area_filtered)});
 	   	
 	   	//Hide nodes
 	   	d3.selectAll("g.node")
@@ -381,7 +468,7 @@ function createForceLayout (nodes, discursive_nodes, links) {
 	      .remove();
 	   	
 	   	//Hide links
-	      d3.selectAll("line")
+	   	d3.selectAll("line")
 	      .data(filteredLinks, function (d) {return d.source.id + "-" + d.target.id})
 	      .exit()
 	      .transition()
@@ -398,9 +485,6 @@ function createForceLayout (nodes, discursive_nodes, links) {
   
   
 }
-
-
-
 
 function dragstarted(d) {
   if (!d3.event.active) simulation.alphaTarget(0.3).restart();
@@ -421,6 +505,5 @@ function dragended(d) {
 
 </script></p>
 
-
-<hr />
+<!-- #CANDID# #EPINET#  -->
 <h6 class="text-align-justify">This project will study aspects of the 'smart' agenda in which practitioners from the Social and Human Sciences (SSH) offer unique and valuable insights of relevance to innovators and researchers in the ICT - LEIT[1] areas. Centred on topics concerning of users, design, digital rights and critical infrastructures, CANDID will engage SSH and ICT - LEIT researchers in "extended peer communications" aiming at Responsible Innovation.</h6>
