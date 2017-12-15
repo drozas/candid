@@ -80,7 +80,7 @@ font-family: Quicksand;
 
 }
 
-/*#controls {
+#controls {
     position: absolute;
     left: 2%;
     top: 2%;
@@ -92,21 +92,46 @@ font-family: Quicksand;
 	-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
 	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
 	color: black;
-	z-index:-1;
-}*/
+	z-index: 1000;
+	padding: 10px;
+}
+
+.ta_nodes_buttons , .ta_discursive_nodes_buttons, div#controls-excerpts-filters p, div#controls-discursive-filters p {
+	font-size: 12px;
+	font-family: Quicksand;
+}
+
+div#controls-excerpts-filters p, div#controls-discursive-filters p {
+	font-weight: bold;
+}
+
+.ta_nodes_buttons , .ta_discursive_nodes_buttons{
+	cursor: pointer;
+}
+
+#controls-xtra-buttons{
+	float: right;
+}
+
 
 </style>
 
 <div id="controls">
- <input type="button" value="Reload" onClick="window.location.reload()">
  <div id="controls-excerpts-filters">
  	<p>Concepts filters</p>
- 	
+ 	 <hr />
  </div>
  <hr />
   <div id="controls-discursive-filters">
    	<p>Discursive strategies filters</p>
+   	 <hr />
  </div>
+
+ <hr /> 
+  <div id="controls-xtra-buttons">
+  
+   <input type="button" value="Reload" onClick="window.location.reload()">
+  </div>
 </div>
 
 <div id="key">
@@ -167,11 +192,11 @@ var edges_url = "https://api.myjson.com/bins/s6ft3";
 var ta_nodes_url = "https://api.myjson.com/bins/1be5w3";
 var ta_discursive_nodes_url = "https://api.myjson.com/bins/o8egj";
 
-var nodes_url = getBaseURL() + "/api/concepts/nodes";
+/*var nodes_url = getBaseURL() + "/api/concepts/nodes";
 var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
 var edges_url = getBaseURL() + "api/discursive-relationships/edges";
 var ta_nodes_url = getBaseURL() + "api/thematic-areas/concepts";
-var ta_discursive_nodes_url =getBaseURL() + "api/thematic-areas/discursive-relationships";
+var ta_discursive_nodes_url =getBaseURL() + "api/thematic-areas/discursive-relationships";*/
 
 
 /****** KEYS ********/
