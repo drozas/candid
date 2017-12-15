@@ -97,7 +97,7 @@ font-family: Quicksand;
 	padding: 10px;
 }
 
-.ta_nodes_buttons , .ta_discursive_nodes_buttons, div#controls-excerpts-filters p, div#controls-discursive-filters p {
+#controls-formula, .ta_nodes_buttons , .ta_discursive_nodes_buttons, div#controls-excerpts-filters p, div#controls-discursive-filters p {
 	font-size: 12px;
 	font-family: Quicksand;
 }
@@ -139,6 +139,15 @@ div#controls-excerpts-filters p , div#controls-discursive-filters p {
  </div>
 
  <hr /> 
+ 
+  <div id="controls-formula">
+  
+  	Seeing all
+   
+  </div>
+
+  <hr /> 
+ 
   <div id="controls-xtra-buttons">
   
    <input type="button" value="Reload" onClick="window.location.reload()">
@@ -203,11 +212,11 @@ var edges_url = "https://api.myjson.com/bins/s6ft3";
 var ta_nodes_url = "https://api.myjson.com/bins/1be5w3";
 var ta_discursive_nodes_url = "https://api.myjson.com/bins/o8egj";
 
-var nodes_url = getBaseURL() + "/api/concepts/nodes";
+/*var nodes_url = getBaseURL() + "/api/concepts/nodes";
 var discursive_nodes_url = getBaseURL() + "/api/concepts/discursive_nodes";
 var edges_url = getBaseURL() + "api/discursive-relationships/edges";
 var ta_nodes_url = getBaseURL() + "api/thematic-areas/concepts";
-var ta_discursive_nodes_url =getBaseURL() + "api/thematic-areas/discursive-relationships";
+var ta_discursive_nodes_url =getBaseURL() + "api/thematic-areas/discursive-relationships";*/
 
 
 
@@ -387,7 +396,7 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
     ta_nodes_buttons.on("click", function(d) {
         //alert(d.ta_name);
     	filterNodesByThematicArea(d.ta_name);
-    	//d3.select(d.ta_name).attr("font-size", "50px");
+    	//d3.select('#controls-formula').text("fuck!");
     });
 
     // Adding TA buttons from nodes via a text 
@@ -438,11 +447,12 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	      .style("opacity", 0)
 	      .remove();
 	   	
-	      force
+	      simulation
+	      .force
 	      .nodes(filteredNodes)
 	      .links(filteredLinks);
 	      
-	      force.start();
+	      simulation.force.start();
   }
 
   function filterRelationshipsByThematicArea(thematic_area_filtered) {
@@ -476,11 +486,12 @@ function createForceLayout (nodes, discursive_nodes, links, ta_nodes, ta_discurs
 	      .style("opacity", 0)
 	      .remove();
 	   	
-	      force
+	      simulation
+	      .force
 	      .nodes(filteredNodes)
 	      .links(filteredLinks);
 	      
-	      force.start();
+	      simulation.force.start();
 }
   
   
